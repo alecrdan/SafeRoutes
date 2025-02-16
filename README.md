@@ -17,6 +17,5 @@
 
 ## 🛠 Installation  
 ```sh
-git clone https://github.com/yourusername/repository-name.git
-cd repository-name
-npm install  # or yarn install
+git clone https://github.com/alecrdan/appdev2_final_project.git
+cd appdev2_final_project

@@ -20,8 +20,7 @@ class Map {
   private initMap() {
     if (!this.mapContainerRef || this.mapRef) return;
 
-    mapboxgl.accessToken =
-      "pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203eXhkaDRrMGVubzJqb2k2dnZjMDZrNCJ9.izchMyEut0FpFHeCWW86og";
+    mapboxgl.accessToken = "pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw";
 
     this.mapRef = new mapboxgl.Map({
       container: this.mapContainerRef,

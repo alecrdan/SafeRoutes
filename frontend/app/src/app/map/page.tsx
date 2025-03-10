@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Map from "./map/map-instance";
-import RouteController from "../controllers/route-controller";
 
 const MapComponent = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -29,9 +28,9 @@ const MapComponent = () => {
     };
   }, []);
 
+  // Test
   useEffect(() => {
     if (mapInstance) {
-      // new RouteController().handleRoute(start, end);
     }
   }, [mapInstance]);
 

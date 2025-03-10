@@ -5,21 +5,21 @@ class MapRoute {
   private type: string;
   private start: GeoPoint;
   private end: GeoPoint;
-  private instance: mapboxgl.Map;
+  private mapInstance: mapboxgl.Map;
 
   constructor(
-    instance: mapboxgl.Map,
-    type: string,
-    start: GeoPoint,
-    end: GeoPoint
+    mapInstance?: mapboxgl.Map,
+    type?: string,
+    start?: GeoPoint,
+    end?: GeoPoint
   ) {
-    this.instance = instance;
-    this.type = type;
-    this.start = start;
-    this.end = end;
+    this.mapInstance = mapInstance!;
+    this.type = type!;
+    this.start = start!;
+    this.end = end!;
   }
 
-  static getInstance(): typeof mapboxgl {
+  static getmapInstance(): typeof mapboxgl {
     if (!mapboxgl.accessToken) {
       throw new Error(
         "MapboxGL is not initialized. Set accessToken before using."
@@ -67,29 +67,58 @@ class MapRoute {
       ],
     };
 
-    if (!this.instance.isStyleLoaded()) {
+    if (!this.mapInstance.isStyleLoaded()) {
       console.warn(`Waiting for map style before adding ${type} point...`);
-      this.instance.once("styledata", () => {
-        this.addPointToMap(pointSourceId, point, type);
+      this.mapInstance.once("styledata", () => {
+        this.addPointToMap(this.mapInstance, pointSourceId, point, type);
       });
     } else {
-      this.addPointToMap(pointSourceId, point, type);
+      this.addPointToMap(this.mapInstance, pointSourceId, point, type);
+    }
+  }
+
+  constructMarker(
+    mapInstance: mapboxgl.Map,
+    type: string,
+    coords: GeoPoint
+  ): void {
+    const pointSourceId = `${type}-point`;
+
+    const point: GeoJSON.FeatureCollection<GeoJSON.Point> = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {},
+          geometry: { type: "Point", coordinates: coords.toArray() },
+        },
+      ],
+    };
+
+    if (!mapInstance.isStyleLoaded()) {
+      console.warn(`Waiting for map style before adding ${type} point...`);
+      this.mapInstance.once("styledata", () => {
+        this.addPointToMap(mapInstance, pointSourceId, point, type);
+      });
+    } else {
+      this.addPointToMap(mapInstance, pointSourceId, point, type);
     }
   }
 
   private addPointToMap(
+    mapInstance: mapboxgl.Map,
     sourceId: string,
     point: GeoJSON.FeatureCollection<GeoJSON.Point>,
     type: string
   ): void {
-    const existingSource = this.instance.getSource(sourceId);
+    const existingSource = mapInstance.getSource(sourceId);
 
     if (existingSource) {
       (existingSource as mapboxgl.GeoJSONSource).setData(point);
     } else {
-      this.instance.addSource(sourceId, { type: "geojson", data: point });
+      mapInstance.addSource(sourceId, { type: "geojson", data: point });
 
-      this.instance.addLayer({
+      mapInstance.addLayer({
         id: `${type}-marker`,
         type: "circle",
         source: sourceId,
@@ -106,13 +135,16 @@ class MapRoute {
       .then((geojson) => {
         if (!geojson) return;
 
-        const existingSource = this.instance.getSource("route");
+        const existingSource = this.mapInstance.getSource("route");
         if (existingSource) {
           (existingSource as mapboxgl.GeoJSONSource).setData(geojson);
         } else {
-          this.instance.addSource("route", { type: "geojson", data: geojson });
+          this.mapInstance.addSource("route", {
+            type: "geojson",
+            data: geojson,
+          });
 
-          this.instance.addLayer({
+          this.mapInstance.addLayer({
             id: "route",
             type: "line",
             source: "route",

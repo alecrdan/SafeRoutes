@@ -1,5 +1,5 @@
+import GeoPoint from "@/app/utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
-import GeoPoint from "../schemas/map";
 
 class MapRoute {
   private type: string;
@@ -30,7 +30,7 @@ class MapRoute {
 
   private async fetchDirections(): Promise<GeoJSON.Feature<GeoJSON.LineString> | null> {
     try {
-      const url = `https://api.mapbox.com/directions/v5/mapbox/${this.type}/${this.start[0]},${this.start[1]};${this.end[0]},${this.end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
+      const url = `https://api.mapbox.com/directions/v5/mapbox/${this.type}/${this.start.longitude},${this.start.latitude};${this.end.longitude},${this.end.latitude}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
       const response = await fetch(url);
 
       if (!response.ok) throw new Error(`HTTP Status: ${response.status}`);
@@ -62,7 +62,7 @@ class MapRoute {
         {
           type: "Feature",
           properties: {},
-          geometry: { type: "Point", coordinates: coords },
+          geometry: { type: "Point", coordinates: coords.toArray() },
         },
       ],
     };

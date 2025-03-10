@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Map from "./map/instance";
-import MapRoute from "./features/create-route";
+import Map from "./map/map-instance";
+import RouteController from "../controllers/route-controller";
 
 const MapComponent = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [mapInstance, setMapInstance] = useState<mapboxgl.Map | null>(null);
-  const map = useRef(new Map()).current;
 
   useEffect(() => {
     if (!mapContainerRef.current) {
@@ -15,47 +14,26 @@ const MapComponent = () => {
       return;
     }
 
-    // Initialize map container
-    console.log("Initializing map container...");
-    map.setContainer(mapContainerRef.current);
+    console.log("Initializing map...");
+    const mapInstance = Map.getInstance(); // Get the singleton instance
+    mapInstance.setContainer(mapContainerRef.current);
 
-    // Get instance of the Map
-    const instance = map.getInstance();
-    if (!instance) {
-      console.error("Error: Map instance failed to initialize.");
-      return;
+    const mapboxMap = mapInstance.getMap();
+    if (mapboxMap) {
+      setMapInstance(mapboxMap);
     }
 
-    // Wait for map to fully load before setting state
-    instance.on("load", () => {
-      console.log("Map style has loaded.");
-      setMapInstance(instance);
-    });
-
     return () => {
-      if (instance) {
-        console.log("Cleaning up map instance...");
-        instance.remove();
-      }
+      console.log("Cleaning up map instance...");
+      mapInstance.removeMap();
     };
   }, []);
 
   useEffect(() => {
     if (mapInstance) {
-      fetchRoute(mapInstance);
+      // new RouteController().handleRoute(start, end);
     }
   }, [mapInstance]);
-
-
-  // Create a route
-  const fetchRoute = async (instance: mapboxgl.Map) => {
-    const start: [number, number] = [-74.006, 40.7128]; // Start: Lower Manhattan
-    const end: [number, number] = [-73.9352, 40.7306]; // End: Brooklyn Bridge Park
-
-    const route = new MapRoute(instance, "cycling", start, end);
-    route.constructRoute();
-    route.constructPoint("start", start);
-  };
 
   return (
     <div

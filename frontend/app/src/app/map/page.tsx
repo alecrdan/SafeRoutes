@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Map from "./map-instance/create-map-instance";
-import MapRoute from "./features/createRoute";
+import Map from "./map/instance";
+import MapRoute from "./features/create-route";
 
 const MapComponent = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -15,16 +15,22 @@ const MapComponent = () => {
       return;
     }
 
+    // Initialize map container
     console.log("Initializing map container...");
     map.setContainer(mapContainerRef.current);
 
+    // Get instance of the Map
     const instance = map.getInstance();
     if (!instance) {
       console.error("Error: Map instance failed to initialize.");
       return;
     }
 
-    setMapInstance(instance);
+    // Wait for map to fully load before setting state
+    instance.on("load", () => {
+      console.log("Map style has loaded.");
+      setMapInstance(instance);
+    });
 
     return () => {
       if (instance) {
@@ -35,23 +41,21 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (!mapInstance) return;
-
-    const fetchRoute = async () => {
-      const coords: [number, number, number, number] = [
-        -74.006,
-        40.7128, // Start: Lower Manhattan
-        -73.9352,
-        40.7306, // End: Brooklyn Bridge Park
-      ];
-
-      const mapRoute = new MapRoute(mapInstance, "cycling", coords);
-      const updatedMap = await mapRoute.getRoute();
-      setMapInstance(updatedMap);
-    };
-
-    fetchRoute();
+    if (mapInstance) {
+      fetchRoute(mapInstance);
+    }
   }, [mapInstance]);
+
+
+  // Create a route
+  const fetchRoute = async (instance: mapboxgl.Map) => {
+    const start: [number, number] = [-74.006, 40.7128]; // Start: Lower Manhattan
+    const end: [number, number] = [-73.9352, 40.7306]; // End: Brooklyn Bridge Park
+
+    const route = new MapRoute(instance, "cycling", start, end);
+    route.constructRoute();
+    route.constructPoint("start", start);
+  };
 
   return (
     <div

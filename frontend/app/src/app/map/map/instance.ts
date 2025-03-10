@@ -20,13 +20,15 @@ class Map {
   private initMap() {
     if (!this.mapContainerRef || this.mapRef) return;
 
-    mapboxgl.accessToken = "pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw";
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw";
 
+    // Map
     this.mapRef = new mapboxgl.Map({
       container: this.mapContainerRef,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [-74.5, 40],
-      zoom: 9,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [-74.006, 40.7128],
+      zoom: 12,
       projection: "globe",
     });
 

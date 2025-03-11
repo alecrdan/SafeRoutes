@@ -123,7 +123,7 @@ class MapRoute {
         type: "circle",
         source: sourceId,
         paint: {
-          "circle-radius": 11,
+          "circle-radius": 10,
           "circle-color": type === "start" ? "#34D399" : "#F87171",
           "circle-emissive-strength": 1.0,
         },

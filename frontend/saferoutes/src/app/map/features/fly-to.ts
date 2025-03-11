@@ -58,7 +58,7 @@ const handleRouteFlyTo = (start: GeoPoint, end: GeoPoint) => {
 
   mapInstance.flyTo({
     center: center,
-    zoom: 13, 
+    zoom: 12, 
     essential: true,
   });
 };

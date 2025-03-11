@@ -69,7 +69,7 @@ const Menu: React.FC = () => {
   };
 
   return (
-    <div className="menu absolute top-5 left-5 z-10 bg-black/85 backdrop-blur-md rounded-xl">
+    <div className="menu z-10 bg-black/75 backdrop-blur-2xl rounded-2xl">
       <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[450px]">
         {/* Start Location Input */}
         <div>
@@ -111,7 +111,7 @@ const Menu: React.FC = () => {
         <div>
           <button
             type="submit"
-            className="flex w-full justify-center rounded-md bg-white px-3 py-2 text-md font-semibold text-black shadow-sm hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
+            className="flex w-full justify-center rounded-md bg-white/90 px-3 py-2 text-md font-semibold text-black shadow-sm hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
           >
             Route
           </button>

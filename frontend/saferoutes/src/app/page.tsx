@@ -6,6 +6,8 @@ import SearchBar from "./components/search-bar";
 
 const Menu = dynamic(() => import("@/app/components/menu"), { ssr: false });
 
+export const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+
 export default function Home() {
   return (
     <div>

@@ -19,9 +19,9 @@ const handleSearchFlyTo = (coords: GeoPoint | null) => {
     console.log(coords);
     mapInstance.flyTo({
       center: [coords.longitude, coords.latitude],
-      zoom: 13,
+      zoom: 12,
       curve: 1,
-      pitch: 0
+      pitch: 40
     });
   } else {
     console.error("Could not fly to location!");

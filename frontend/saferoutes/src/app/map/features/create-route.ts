@@ -123,8 +123,9 @@ class MapRoute {
         type: "circle",
         source: sourceId,
         paint: {
-          "circle-radius": 10,
+          "circle-radius": 11,
           "circle-color": type === "start" ? "#34D399" : "#F87171",
+          "circle-emissive-strength": 1.0,
         },
       });
     }
@@ -155,7 +156,8 @@ class MapRoute {
             paint: {
               "line-color": "#2563EB",
               "line-width": 10,
-              "line-opacity": 0.8,
+              "line-opacity": 0.9,
+              "line-emissive-strength": 1.0,
             },
           });
         }

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import GeoPoint from "../utils/geo/GeoPoint";
 import { handleSearchFlyTo } from "../map/features/fly-to";
+import { token } from "../page";
 
 const SearchBar = () => {
   const [coords, setCoords] = useState<GeoPoint | null>(null);
@@ -53,7 +54,7 @@ const SearchBar = () => {
         {/* Start Location Input */}
         <div className="">
           {/* <SearchBox
-            accessToken="pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw"
+            // accessToken={token}
             onRetrieve={handleRetrieve}
             theme={theme}
           /> */}

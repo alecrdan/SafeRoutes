@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import GeoPoint from "../utils/geo/GeoPoint";
 import handleRoute from "../controllers/route-controller";
 import { handleRouteFlyTo } from "../map/features/fly-to";
+import { token } from "../page";
 
 interface LocationData {
   address: string;
@@ -77,7 +78,7 @@ const Menu: React.FC = () => {
           </label>
           <div className="mt-2">
             {/* <SearchBox
-              accessToken="pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw"
+              accessToken={token}
               options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
               value={start?.fullAddress || ""}
               onChange={(value) =>
@@ -95,7 +96,7 @@ const Menu: React.FC = () => {
           </label>
           <div className="mt-2">
             {/* <SearchBox
-              accessToken="pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw"
+               accessToken={token}
               options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
               value={end?.fullAddress || ""}
               onChange={(value) =>

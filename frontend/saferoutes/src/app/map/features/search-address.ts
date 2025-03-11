@@ -1,3 +1,5 @@
+import { token } from "@/app/page";
+
 type Coordinates = [number, number];
 
 class SearchAddress {
@@ -21,7 +23,7 @@ class SearchAddress {
 
     try {
       const response = await fetch(
-        `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(this.address)}&access_token=pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw`
+        `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(this.address)}&access_token=${token}`
       );
 
       if (!response.ok) {
@@ -47,7 +49,7 @@ class SearchAddress {
 
     try {
       const response = await fetch(
-        `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${longitude}&latitude=${latitude}&access_token=pk.eyJ1IjoiYWxlY3JkYW4iLCJhIjoiY203ejdtdmVhMGlocDJrcTQxY3Juamg0aiJ9.4PKhiLg4cZmfj0FOMXqeBw`
+        `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${longitude}&latitude=${latitude}&access_token=${token}`
       );
 
       if (!response.ok) {

@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import GeoPoint from "../utils/geo/GeoPoint";
 import { handleSearchFlyTo } from "../map/features/fly-to";
 import { token } from "../page";
+import { Button } from "@headlessui/react";
 
 const SearchBar = () => {
   const [coords, setCoords] = useState<GeoPoint | null>(null);
@@ -59,12 +60,12 @@ const SearchBar = () => {
             theme={theme}
           /> */}
         </div>
-        <button
+        <Button
           type="submit"
-          className="flex w-full justify-center rounded-md bg-white/90 px-3 py-2 text-md font-semibold text-black shadow-sm hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
+          className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-md/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
         >
           Search
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -11,12 +11,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
-from dotenv import load_dotenv
+import dotenv
+from os import getenv, path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_file = BASE_DIR / '.env.local'
+
+if path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
+
+DEVELOPMENT_MODE = getenv('DEVELOPMENT_MODE', 'False') == 'True'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,8 +32,6 @@ SECRET_KEY = 'django-insecure--jap1y^!@17__s0&*1g84@i_+dy%kkb-lvi*sg-!nv(*ed00&7
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-load_dotenv()
 
 ALLOWED_HOSTS = []
 
@@ -41,6 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'djoser',
+    'storages',
+    'social_django',
+    # Custom
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -80,11 +91,11 @@ WSGI_APPLICATION = 'apps.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
+        'NAME': getenv('DATABASE_NAME'),
+        'USER': getenv('DATABASE_USER'),
+        'PASSWORD': getenv('DATABASE_PASSWORD'),
+        'HOST': getenv('DATABASE_HOST'),
+        'PORT': getenv('DATABASE_PORT'),
     }
 }
 
@@ -123,6 +134,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = 'users.UserAccount'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

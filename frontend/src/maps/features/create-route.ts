@@ -1,4 +1,4 @@
-import GeoPoint from "../../utils/geo/GeoPoint";
+import GeoPoint from "../utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
 
 class MapRoute {

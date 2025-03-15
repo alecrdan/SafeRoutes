@@ -26,14 +26,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Provider>
-        <Setup />
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Provider>
+          {/* Includes setting up toast messages */}
+          <Setup />
           {children}
-        </body>
-      </Provider>
+        </Provider>
+      </body>
     </html>
   );
 }

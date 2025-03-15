@@ -2,7 +2,7 @@
 
 import Navbar from "./components/navbar";
 import SearchBar from "./components/search-bar";
-import MapView from "./map/page";
+import MapView from "../maps/page";
 import dynamic from "next/dynamic";
 
 const Menu = dynamic(() => import("./components/menu"), { ssr: false });

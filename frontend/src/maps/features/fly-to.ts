@@ -1,5 +1,5 @@
 import Map from "../map/map-instance";
-import GeoPoint from "../../utils/geo/GeoPoint";
+import GeoPoint from "../utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
 import MapRoute from "./create-route";
 

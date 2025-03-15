@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import GeoPoint from "../utils/geo/GeoPoint";
-import handleRoute from "../controllers/route-controller";
-import { handleRouteFlyTo } from "../map/features/fly-to";
+import GeoPoint from "../../maps/utils/geo/GeoPoint";
+import handleRoute from "../../maps/controllers/route-controller";
+import { handleRouteFlyTo } from "../../maps/features/fly-to";
 import { token } from "../page";
 import { Button } from "@headlessui/react";
 

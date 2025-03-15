@@ -11,7 +11,6 @@ import {
 } from "@headlessui/react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useLoginMutation } from "../../../redux/features/authApiSlice";
 import { setAuth } from "../../../redux/features/authSlice";
@@ -34,7 +33,6 @@ export default function Login({
 
   useEffect(() => {
     if (isAuthenticated) {
-      // To actions
     }
   }, [isAuthenticated]);
 
@@ -51,7 +49,8 @@ export default function Login({
       await login({ email, password }).unwrap();
       dispatch(setAuth());
       toast.success("Logged in");
-    } catch {
+    } catch (error) {
+      console.error("Login failed:", error);
       toast.error("Failed to log in");
     }
   };

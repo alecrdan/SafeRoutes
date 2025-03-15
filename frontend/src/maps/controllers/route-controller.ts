@@ -1,8 +1,8 @@
-import MapRoute from "../map/features/create-route";
-import Map from "../map/map/map-instance";
+import MapRoute from "../features/create-route";
+import Map from "../map/map-instance";
 import GeoPoint from "../utils/geo/GeoPoint";
 
-const mapInstance = Map.getInstance().getMap()
+const mapInstance = Map.getInstance().getMap();
 
 const handleRoute = (start: GeoPoint, end: GeoPoint) => {
   if (!mapInstance) {

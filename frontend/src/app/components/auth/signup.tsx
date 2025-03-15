@@ -47,26 +47,25 @@ export default function SignUp({
 
   const onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    const { firstName, lastName, email, password, rePassword } = formData;
 
-    if (!passwordRequirements(password)) {
+    if (!passwordRequirements(formData.password)) {
       toast.error(
         "Password must be at least 5 characters, include 2 numbers, and 1 special character."
       );
       return;
     }
 
-    if (password !== rePassword) {
+    if (formData.password !== formData.rePassword) {
       toast.error("Passwords do not match.");
       return;
     }
 
     register({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password,
-      re_password: rePassword,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      re_password: formData.rePassword,
     })
       .unwrap()
       .then(() => {
@@ -74,6 +73,7 @@ export default function SignUp({
       })
       .catch((error) => {
         const message = error?.data?.detail || "Failed to register account";
+        console.error("Error signing up:", error);
         toast.error(message);
       });
   };

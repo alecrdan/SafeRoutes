@@ -2,8 +2,8 @@
 
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
-import GeoPoint from "../utils/geo/GeoPoint";
-import { handleSearchFlyTo } from "../map/features/fly-to";
+import GeoPoint from "../../maps/utils/geo/GeoPoint";
+import { handleSearchFlyTo } from "../../maps/features/fly-to";
 import { token } from "../page";
 import { Button } from "@headlessui/react";
 

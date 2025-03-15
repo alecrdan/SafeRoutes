@@ -1,4 +1,4 @@
-import { token } from "../../page";
+import { token } from "../../app/page";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 

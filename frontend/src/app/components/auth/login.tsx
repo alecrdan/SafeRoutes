@@ -50,7 +50,7 @@ export default function Login({
       dispatch(setAuth());
       toast.success("Logged in");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Login failed:", JSON.stringify(error));
       toast.error("Failed to log in");
     }
   };

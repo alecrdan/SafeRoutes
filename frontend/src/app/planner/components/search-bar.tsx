@@ -31,12 +31,12 @@ const SearchBar = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log("Flying to coords:", coords);
+      console.log("Flying to coords:", JSON.stringify(coords));
       const sdPoint = new GeoPoint(-117.1611, 32.7157);
 
       handleSearchFlyTo(sdPoint);
     } catch (error) {
-      console.error("Error in handleFlyTo:", error);
+      console.error("Error in handleFlyTo:", JSON.stringify(error));
     }
   };
 

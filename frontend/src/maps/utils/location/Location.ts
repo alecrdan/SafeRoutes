@@ -1,4 +1,4 @@
-interface Location {
+export default interface Location {
   features?: {
     properties?: {
       full_address?: string;
@@ -17,4 +17,3 @@ interface Location {
   }[];
 }
 
-export default Location;

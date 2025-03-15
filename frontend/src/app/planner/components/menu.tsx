@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import GeoPoint from "../../../maps/utils/geo/GeoPoint";
-import handleRoute from "../../../maps/controllers/route-controller";
 import { handleRouteFlyTo } from "../../../maps/features/fly-to";
-import { token } from "../page";
+import { handleRoute } from "../../../maps/controllers/route-controller"; 
 import { Button } from "@headlessui/react";
 
 interface LocationData {

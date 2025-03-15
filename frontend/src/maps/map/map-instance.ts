@@ -52,8 +52,8 @@ class Map {
 
     this.mapRef = new mapboxgl.Map({
       container: this.mapContainerRef,
-      // style: "mapbox://styles/mapbox/standard",
-      style: "mapbox://styles/mapbox/streets-v12",
+      style: "mapbox://styles/mapbox/standard",
+      // style: "mapbox://styles/mapbox/streets-v12",
       center: [-74.006, 40.7128],
       zoom: 12,
       projection: "globe",

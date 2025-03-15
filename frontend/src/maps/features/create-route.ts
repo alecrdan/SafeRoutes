@@ -1,3 +1,5 @@
+
+import { getDirections } from "../controllers/api-routes";
 import GeoPoint from "../utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
 
@@ -30,21 +32,25 @@ class MapRoute {
 
   private async fetchDirections(): Promise<GeoJSON.Feature<GeoJSON.LineString> | null> {
     try {
-      const url = `https://api.mapbox.com/directions/v5/mapbox/${this.type}/${this.start.longitude},${this.start.latitude};${this.end.longitude},${this.end.latitude}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-      const response = await fetch(url);
+      const response = await fetch(
+        getDirections("cycling", this.start, this.end, mapboxgl.accessToken)
+      );
 
       if (!response.ok) throw new Error(`HTTP Status: ${response.status}`);
+
       const data = await response.json();
 
       if (!data.routes || data.routes.length === 0)
         throw new Error("No routes found.");
+
+      const route_geometry = data.routes[0].geometry;
 
       return {
         type: "Feature",
         properties: {},
         geometry: {
           type: "LineString",
-          coordinates: data.routes[0].geometry.coordinates,
+          coordinates: route_geometry.coordinates,
         },
       };
     } catch (error) {

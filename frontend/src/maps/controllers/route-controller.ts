@@ -4,7 +4,7 @@ import GeoPoint from "../utils/geo/GeoPoint";
 
 const mapInstance = Map.getInstance().getMap();
 
-const handleRoute = (start: GeoPoint, end: GeoPoint) => {
+export const handleRoute = (start: GeoPoint, end: GeoPoint) => {
   if (!mapInstance) {
     console.error("Map instance is not initialized.");
     return;
@@ -16,4 +16,3 @@ const handleRoute = (start: GeoPoint, end: GeoPoint) => {
   route.constructPoint("end", end);
 };
 
-export default handleRoute;

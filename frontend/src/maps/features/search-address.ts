@@ -33,7 +33,6 @@ class SearchAddress {
       }
 
       const data = await response.json();
-      console.log("Data received:", data);
       return data;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -59,7 +58,6 @@ class SearchAddress {
       }
 
       const data = await response.json();
-      console.log("Data received:", data);
       return data;
     } catch (error) {
       console.error("Error fetching data:", error);

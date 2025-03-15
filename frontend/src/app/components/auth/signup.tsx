@@ -73,7 +73,7 @@ export default function SignUp({
       })
       .catch((error) => {
         const message = error?.data?.detail || "Failed to register account";
-        console.error("Error signing up:", error);
+        console.error("Error signing up:", JSON.stringify(error));
         toast.error(message);
       });
   };

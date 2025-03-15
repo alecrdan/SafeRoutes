@@ -16,7 +16,6 @@ const handleSearchFlyTo = (coords: GeoPoint | null) => {
     new MapRoute().constructMarker(mapInstance, "search-marker", coords);
 
     // Fly to
-    console.log(coords);
     mapInstance.flyTo({
       center: [coords.longitude, coords.latitude],
       zoom: 12,

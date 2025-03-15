@@ -1,12 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.postgres.fields import JSONField 
+from django.conf import settings
 
 class Route(models.Model):
     """Stores user-defined routes with safety ratings, preferences, and JSON API response"""
     
     route_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="routes")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="routes"
+    )
     route_name = models.CharField(max_length=255, help_text="User-defined name for the route")
     
     start_latitude = models.DecimalField(max_digits=9, decimal_places=6)

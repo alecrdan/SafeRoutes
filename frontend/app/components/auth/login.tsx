@@ -7,10 +7,15 @@ import {
   Button,
   Field,
   Label,
-  Description,
   Input,
 } from "@headlessui/react";
 import { clsx } from "clsx";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useLoginMutation } from "../../../redux/features/authApiSlice";
+import { setAuth } from "../../../redux/features/authSlice";
+import { toast } from "react-toastify";
 
 export default function Login({
   isOpen,
@@ -19,85 +24,68 @@ export default function Login({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const dispatch = useAppDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [login, { isLoading }] = useLoginMutation();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      // To actions
+    }
+  }, [isAuthenticated]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const onSubmit = async () => {
+    try {
+      await login({ email, password }).unwrap();
+      dispatch(setAuth());
+      toast.success("Logged in");
+    } catch {
+      toast.error("Failed to log in");
+    }
+  };
+
   return (
     <Dialog open={isOpen} as="div" className="relative z-50" onClose={onClose}>
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
       <div className="fixed inset-0 flex items-center bottom-40 justify-center p-4">
-        <DialogPanel className="py-20 px-20  w-full max-w-xl rounded-xl bg-black/75 backdrop-blur-2xl p-6 shadow-xl transition-all transform scale-100 opacity-100">
+        <DialogPanel className="py-20 px-20 w-full max-w-lg rounded-xl bg-black/75 backdrop-blur-2xl shadow-xl transition-all transform scale-100 opacity-100">
           <DialogTitle as="h3" className="pb-5 text-3xl font-bold text-white">
-            Sign Up
+            Login
           </DialogTitle>
-          {/* <p className="mt-2 text-sm text-white">
-            Enter your credentials to continue.
-          </p> */}
           <div className="fields">
-            <Field className="pb-1">
-              <Label className="text-sm/6 font-medium text-white">
-                First Name
-              </Label>
-              {/* <Description className="text-sm/6 text-white/50">
-                Password
-              </Description> */}
+            <Field className="pb-3">
+              <Label className="text-sm font-medium text-white">Email</Label>
               <Input
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
                 className={clsx(
-                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                  "mt-2 block w-full rounded-lg border-none bg-white/5 py-2 px-3 text-sm text-white",
                   "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
                 )}
               />
             </Field>
 
-            <Field className="pb-1">
-              <Label className="text-sm/6 font-medium text-white">
-                Last Name
-              </Label>
-              {/* <Description className="text-sm/6 text-white/50">
-                Password
-              </Description> */}
+            <Field className="pb-3">
+              <Label className="text-sm font-medium text-white">Password</Label>
               <Input
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
                 className={clsx(
-                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
-                )}
-              />
-            </Field>
-
-            <Field className="pb-1">
-              <Label className="text-sm/6 font-medium text-white">Email</Label>
-              {/* <Description className="text-sm/6 text-white/50">
-               johndoe@example.com
-              </Description> */}
-              <Input
-                className={clsx(
-                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
-                )}
-              />
-            </Field>
-            <Field className="pb-1">
-              <Label className="text-sm/6 font-medium text-white">
-                Password
-              </Label>
-              {/* <Description className="text-sm/6 text-white/50">
-                Password
-              </Description> */}
-              <Input
-                className={clsx(
-                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
-                )}
-              />
-            </Field>
-
-            <Field className="pb-1">
-              <Label className="text-sm/6 font-medium text-white">
-                Confirm Password
-              </Label>
-              {/* <Description className="text-sm/6 text-white/50">
-                Password
-              </Description> */}
-              <Input
-                className={clsx(
-                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                  "mt-2 block w-full rounded-lg border-none bg-white/5 py-2 px-3 text-sm text-white",
                   "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
                 )}
               />
@@ -106,10 +94,11 @@ export default function Login({
 
           <div className="mt-7">
             <Button
-              onClick={onClose}
-              className="flex w-full justify-center rounded-md bg-gray-700 py-2 px-3 text-md/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+              onClick={onSubmit}
+              disabled={isLoading}
+              className="flex w-full justify-center rounded-md bg-gray-700 py-2 px-3 text-md font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600"
             >
-              Sign up
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </div>
         </DialogPanel>

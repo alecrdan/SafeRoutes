@@ -5,20 +5,70 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Login from "./auth/login";
+import {logout as setLogout} from "../../redux/features/authSlice"
 import SignUp from "./auth/signup";
+import { useLogoutMutation } from "../../redux/features/authApiSlice";
+import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isSignUpOpen, setSignUpOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+
+  const pathname = usePathname();
+  const dispatch = useAppDispatch();
+
+  const [logout] = useLogoutMutation();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+	const handleLogout = () => {
+    logout(undefined)
+      .unwrap()
+      .then(() => {
+        dispatch(setLogout());
+      });
+  };
+
+  const guestLinks = (isMobile: boolean) => (
+    <>
+      <button
+        onClick={() => {
+          setIsLoginOpen(true);
+          setIsSignUpOpen(false);
+        }}
+        className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-sm font-semibold text-white shadow-inner focus:outline-none hover:bg-gray-600"
+      >
+        Login
+      </button>
+
+      <button
+        onClick={() => {
+          setIsSignUpOpen(true);
+          setIsLoginOpen(false);
+        }}
+        className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-sm font-semibold text-white shadow-inner focus:outline-none hover:bg-gray-600"
+      >
+        Register
+      </button>
+    </>
+  );
+
+  const authLinks = (isMobile: boolean) => (
+    <button
+      onClick={handleLogout}
+      className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-sm font-semibold text-white shadow-inner focus:outline-none hover:bg-gray-600"
+    >
+      Logout
+    </button>
+  );
 
   return (
     <>
@@ -26,9 +76,10 @@ export default function Navbar() {
       {isLoginOpen && (
         <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       )}
+
       {/* SignUp Modal */}
       {isSignUpOpen && (
-        <SignUp isOpen={isSignUpOpen} onClose={() => setSignUpOpen(false)} />
+        <SignUp isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)} />
       )}
 
       <Disclosure as="nav" className="bg-black/75 backdrop-blur-2xl">
@@ -70,7 +121,7 @@ export default function Navbar() {
             </div>
 
             {/* Search Input */}
-            <Input
+            <input
               type="text"
               placeholder="Search..."
               className="hidden sm:block w-72 rounded-lg border-none bg-white/10 py-1.5 px-3 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/25"
@@ -82,25 +133,7 @@ export default function Navbar() {
                 <BellIcon className="w-6 h-6" />
               </button>
 
-              <button
-                onClick={() => {
-                  setIsLoginOpen(true);
-                  setSignUpOpen(false); // Close sign-up when login opens
-                }}
-                className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-              >
-                Login
-              </button>
-
-              <button
-                onClick={() => {
-                  setSignUpOpen(true);
-                  setIsLoginOpen(false); // Close login when sign-up opens
-                }}
-                className="flex w-full flex-row justify-center rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-              >
-                Register
-              </button>
+              {isAuthenticated ? authLinks(false) : guestLinks(false)}
             </div>
 
             {/* Mobile Menu Button */}
@@ -143,25 +176,7 @@ export default function Navbar() {
 
           <div className="border-t border-gray-700 pb-3 pt-4">
             <div className="flex items-center px-5 space-x-4">
-              <button
-                onClick={() => {
-                  setIsLoginOpen(true);
-                  setSignUpOpen(false);
-                }}
-                className="rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow-inner hover:bg-gray-600"
-              >
-                Login
-              </button>
-
-              <button
-                onClick={() => {
-                  setSignUpOpen(true);
-                  setIsLoginOpen(false);
-                }}
-                className="rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow-inner hover:bg-gray-600"
-              >
-                Sign up
-              </button>
+              {isAuthenticated ? authLinks(true) : guestLinks(true)}
 
               <button className="ml-auto p-2 rounded-full bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
                 <BellIcon className="w-6 h-6" />

@@ -1,4 +1,4 @@
-import { token } from "../../app/page";
+import { token } from "../../app/planner/page";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -52,7 +52,8 @@ class Map {
 
     this.mapRef = new mapboxgl.Map({
       container: this.mapContainerRef,
-      style: "mapbox://styles/mapbox/standard",
+      // style: "mapbox://styles/mapbox/standard",
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [-74.006, 40.7128],
       zoom: 12,
       projection: "globe",

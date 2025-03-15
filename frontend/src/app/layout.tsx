@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Provider from "../redux/provider";
 import { Setup } from "./components/utils";
+import Navbar from "./components/core/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Provider>
           {/* Includes setting up toast messages */}
           <Setup />
+          <Navbar />
           {children}
         </Provider>
       </body>

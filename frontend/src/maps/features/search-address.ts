@@ -1,4 +1,4 @@
-import { token } from "../../app/page";
+import { token } from "../../app/planner/page";
 
 type Coordinates = [number, number];
 

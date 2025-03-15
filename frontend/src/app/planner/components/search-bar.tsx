@@ -2,8 +2,8 @@
 
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
-import GeoPoint from "../../maps/utils/geo/GeoPoint";
-import { handleSearchFlyTo } from "../../maps/features/fly-to";
+import GeoPoint from "../../../maps/utils/geo/GeoPoint";
+import { handleSearchFlyTo } from "../../../maps/features/fly-to";
 import { token } from "../page";
 import { Button } from "@headlessui/react";
 
@@ -50,7 +50,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="menu z-10 bg-black/75 backdrop-blur-2xl rounded-2xl">
+    <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">
       <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[450px]">
         {/* Start Location Input */}
         <div className="">

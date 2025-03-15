@@ -5,19 +5,15 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import Login from "./auth/login";
-import {logout as setLogout} from "../../redux/features/authSlice"
-import SignUp from "./auth/signup";
-import { useLogoutMutation } from "../../redux/features/authApiSlice";
+import Login from "../auth/login";
+import { logout as setLogout } from "../../../redux/features/authSlice";
+import SignUp from "../auth/signup";
+import { useLogoutMutation } from "../../../redux/features/authApiSlice";
 import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -29,7 +25,7 @@ export default function Navbar() {
   const [logout] = useLogoutMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-	const handleLogout = () => {
+  const handleLogout = () => {
     logout(undefined)
       .unwrap()
       .then(() => {
@@ -82,40 +78,36 @@ export default function Navbar() {
         <SignUp isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)} />
       )}
 
-      <Disclosure as="nav" className="bg-black/75 backdrop-blur-2xl">
+      <Disclosure as="nav" className="bg-zinc-950 backdrop-blur-2xl">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-18 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <img
-                alt="Your Company"
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto pr-8"
-              />
+              <a href="/home">
+                <img
+                  alt="Your Company"
+                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                  className="h-8 w-auto pr-8"
+                />
+              </a>
               <div className="hidden sm:flex space-x-4">
                 <a
-                  href="#"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-white bg-gray-900"
+                  href="/planner"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
-                  Dashboard
+                  Planner
                 </a>
                 <a
                   href="#"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
-                  Team
+                  Explore Routes
                 </a>
                 <a
                   href="#"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
-                  Projects
-                </a>
-                <a
-                  href="#"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Calendar
+                  Join the club
                 </a>
               </div>
             </div>

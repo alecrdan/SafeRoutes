@@ -59,7 +59,7 @@ export default function Login({
     <Dialog open={isOpen} as="div" className="relative z-50" onClose={onClose}>
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
       <div className="fixed inset-0 flex items-center bottom-40 justify-center p-4">
-        <DialogPanel className="py-20 px-20 w-full max-w-lg rounded-xl bg-black/75 backdrop-blur-2xl shadow-xl transition-all transform scale-100 opacity-100">
+        <DialogPanel className="py-20 px-20 w-full max-w-lg rounded-xl bg-black/90 backdrop-blur-2xl shadow-xl transition-all transform scale-100 opacity-100">
           <DialogTitle as="h3" className="pb-5 text-3xl font-bold text-white">
             Login
           </DialogTitle>

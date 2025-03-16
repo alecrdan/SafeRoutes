@@ -31,15 +31,19 @@ export default function Login({
   const [login, { isLoading }] = useLoginMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
+  // Handles when user is authenticated
   useEffect(() => {
     if (isAuthenticated) {
+      console.log("User is authenticated.");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, onClose]);
 
+  // Handle email change
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
+  // Handle password change
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };

@@ -31,7 +31,8 @@
     "react-redux": "^9.2.0",
     "react-toastify": "^11.0.5",
     "redux": "^5.0.1",
-    "use-debounce": "^10.0.4"
+    "use-debounce": "^10.0.4",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

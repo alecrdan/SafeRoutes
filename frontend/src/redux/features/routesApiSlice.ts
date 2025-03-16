@@ -10,30 +10,20 @@ const eventsApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    // retrieveEvent: builder.query<Event, number>({
-    //     query: (id) => `/events/${id}/`,
-    // }),
-    // createEvent: builder.mutation<Event, CreateEventArgs>({
-    //     query: (data) => ({
-    //         url: '/events/create/',
-    //         method: 'POST',
-    //         body: data,
-    //     }),
-    // }),
-    // updateEvent: builder.mutation<Event, UpdateEventArgs>({
-    //     query: ({ id, ...data }) => ({
-    //         url: `/update/${id}/`,
-    //         method: 'PUT',
-    //         body: data,
-    //     }),
-    // }),
-    // deleteEvent: builder.mutation<void, number>({
-    //     query: (id) => ({
-    //         url: `/events/delete/${id}/`,
-    //         method: 'DELETE',
-    //     }),
-    // }),
+    getRoutes: builder.query<Route[], void>({
+      query: (data) => ({
+        url: "/routes/",
+        method: "GET",
+        body: data,
+      }),
+    }),
+    getRoute: builder.query<number, Route>({
+      query: (id) => ({
+        url: `/route/${id}/`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useSaveRouteQuery } = eventsApiSlice;
+export const { useSaveRouteQuery,useGetRouteQuery,useGetRoutesQuery } = eventsApiSlice;

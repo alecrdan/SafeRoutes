@@ -6,7 +6,7 @@ class Map {
   private static instance: Map | null = null;
   private mapRef: mapboxgl.Map | null;
   private mapContainerRef: HTMLDivElement | null;
-
+  
   private constructor() {
     this.mapRef = null;
     this.mapContainerRef = null;
@@ -20,7 +20,7 @@ class Map {
     return Map.instance;
   }
 
-  // Set the container and initialize the Map
+  /** Set the container and initialize the Map */
   public setContainer(container: HTMLDivElement) {
     if (this.mapContainerRef !== container) {
       this.mapContainerRef = container;
@@ -28,7 +28,7 @@ class Map {
     }
   }
 
-  // Initialize the Mapbox Map
+  /** Initialize the Mapbox Map */
   private initMap() {
     if (!this.mapContainerRef || this.mapRef) return;
 
@@ -39,22 +39,15 @@ class Map {
 
     // Determine light preset based on time of day
     let lightPreset: "dawn" | "day" | "dusk" | "night";
-
-    if (currentHour >= 5 && currentHour < 8) {
-      lightPreset = "dawn";
-    } else if (currentHour >= 8 && currentHour < 18) {
-      lightPreset = "day";
-    } else if (currentHour >= 18 && currentHour < 21) {
-      lightPreset = "dusk";
-    } else {
-      lightPreset = "night";
-    }
+    if (currentHour >= 5 && currentHour < 8) lightPreset = "dawn";
+    else if (currentHour >= 8 && currentHour < 18) lightPreset = "day";
+    else if (currentHour >= 18 && currentHour < 21) lightPreset = "dusk";
+    else lightPreset = "night";
 
     this.mapRef = new mapboxgl.Map({
       container: this.mapContainerRef,
       style: "mapbox://styles/mapbox/standard",
-      // style: "mapbox://styles/mapbox/streets-v12",
-      center: [-74.006, 40.7128],
+      center: [-122.4194, 37.7749],
       zoom: 12,
       projection: "globe",
     });

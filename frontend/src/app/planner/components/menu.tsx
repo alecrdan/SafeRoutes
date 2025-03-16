@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GeoPoint from "../../../maps/utils/geo/GeoPoint";
-import { handleRouteFlyTo } from "../../../maps/features/fly-to";
-import { handleRoute } from "../../../maps/controllers/route-controller"; 
 import { Button } from "@headlessui/react";
+import { Route } from "../../../maps/utils/route/route";
+import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
+import { initializeRoutes } from "@/maps/controllers/route-controller";
 
 interface LocationData {
   address: string;
@@ -16,6 +17,9 @@ interface LocationData {
 const Menu: React.FC = () => {
   const [start, setStart] = useState<LocationData | null>(null);
   const [end, setEnd] = useState<LocationData | null>(null);
+  const [routes, setRoutes] = useState<Route[]>([]);
+
+  const { data: receivedRoutes } = useGetRoutesQuery();
 
   const handleRetrieve = (res: Location | any, type: "start" | "end") => {
     if (!res.features?.length) {
@@ -27,7 +31,7 @@ const Menu: React.FC = () => {
     if (!feature.properties) return;
 
     const { properties } = feature;
-    const { context, coordinates } = properties;
+    const { coordinates } = properties;
 
     const locationData: LocationData = {
       address: properties.address ?? "",
@@ -39,32 +43,40 @@ const Menu: React.FC = () => {
     type === "start" ? setStart(locationData) : setEnd(locationData);
   };
 
+  useEffect(() => {
+    if (receivedRoutes && Array.isArray(receivedRoutes)) {
+      setRoutes(receivedRoutes);
+      console.log(receivedRoutes);
+     try{
+       initializeRoutes(receivedRoutes);
+     } catch (error) {
+    console.error("Failed to initialize");
+     }
+    } else {
+      console.error("Invalid data format for routes:", receivedRoutes);
+    }
+  }, [receivedRoutes]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // if (!start || !end) {
-    //   console.error("Start or End location is missing.");
-    //   return;
-    // }
+    if (!start || !end) {
+      console.error("Start or End location is missing.");
+      return;
+    }
 
     try {
-      // let startGeoPoint = new GeoPoint(start.longitude, start.latitude);
-      // let endGeoPoint = new GeoPoint(end.longitude, end.latitude);
+      let startGeoPoint = new GeoPoint(start.latitude, start.longitude);
+      let endGeoPoint = new GeoPoint(end.latitude, end.longitude);
 
-      // console.log("Start GeoPoint:", startGeoPoint.toString());
-      // console.log("End GeoPoint:", endGeoPoint.toString());
-
-      // const distance = startGeoPoint.distanceTo(endGeoPoint);
+      console.log("Start GeoPoint:", startGeoPoint.toString());
+      console.log("End GeoPoint:", endGeoPoint.toString());
 
       // Hardcoded Values to save API tokens
-      const one = new GeoPoint(-73.9855, 40.758);
-      const two = new GeoPoint(-74.017, 40.7033);
-
-      handleRoute(one, two);
-      handleRouteFlyTo(one, two);
-      // console.log(`Distance: ${distance.toFixed(2)} km`);
+      const one = new GeoPoint(40.758, -73.9855);
+      const two = new GeoPoint(40.7033, -74.017);
     } catch (error) {
-      console.error("Failed to create route");
+      console.error("Failed to create route", error);
     }
   };
 
@@ -76,17 +88,7 @@ const Menu: React.FC = () => {
           <label className="block text-sm font-medium text-gray-100">
             Start
           </label>
-          <div className="mt-2">
-            {/* <SearchBox
-              accessToken={token}
-              options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
-              value={start?.fullAddress || ""}
-              onChange={(value) =>
-                setStart({ ...start, fullAddress: value } as LocationData)
-              }
-              onRetrieve={(res: any) => handleRetrieve(res, "start")}
-            /> */}
-          </div>
+          <div className="mt-2">{/* <SearchBox ... /> */}</div>
         </div>
 
         {/* Destination Input */}
@@ -94,17 +96,7 @@ const Menu: React.FC = () => {
           <label className="block text-sm font-medium text-gray-100">
             Destination
           </label>
-          <div className="mt-2">
-            {/* <SearchBox
-               accessToken={token}
-              options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
-              value={end?.fullAddress || ""}
-              onChange={(value) =>
-                setEnd({ ...end, fullAddress: value } as LocationData)
-              }
-              onRetrieve={(res: any) => handleRetrieve(res, "end")}
-            /> */}
-          </div>
+          <div className="mt-2">{/* <SearchBox ... /> */}</div>
         </div>
 
         {/* Submit Button */}

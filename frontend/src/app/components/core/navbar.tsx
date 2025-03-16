@@ -7,19 +7,19 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "../auth/login";
 import { logout as setLogout } from "../../../redux/features/authSlice";
 import SignUp from "../auth/signup";
 import { useLogoutMutation } from "../../../redux/features/authApiSlice";
 import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { removeAllLayers } from "@/maps/controllers/route-controller";
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
-  const pathname = usePathname();
   const dispatch = useAppDispatch();
 
   const [logout] = useLogoutMutation();
@@ -30,8 +30,13 @@ export default function Navbar() {
       .unwrap()
       .then(() => {
         dispatch(setLogout());
-      });
+      })
+      .finally(() => removeAllLayers());
   };
+
+  useEffect(() => {
+    setIsLoginOpen(false);
+  }, [isAuthenticated]);
 
   const guestLinks = (isMobile: boolean) => (
     <>

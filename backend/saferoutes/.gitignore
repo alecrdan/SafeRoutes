@@ -68,3 +68,6 @@ junit.xml
 # Local development
 *.local
 *.dev
+
+# Models
+models.py

@@ -1,4 +1,4 @@
-import { getDirections } from "../controllers/api-routes";
+import { getDirections } from "../services/api-routes";
 import GeoPoint from "../utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
 import { v4 as uuidv4 } from "uuid";
@@ -31,6 +31,9 @@ class MapRoute {
       // Add layers for rendering points and routes
       this.addLayers();
     }
+
+    // Add a slight delay to endure layers are added
+    setTimeout(() => this.addLayers(), 50);
   }
 
   // ** Adds Mapbox Layers (if they don’t already exist) **
@@ -91,6 +94,9 @@ class MapRoute {
     data.features.push(feature);
 
     source.setData(data);
+
+    // Repaint layer after each added feature
+    this.mapInstance.triggerRepaint();
   }
 
   // ** Fetches route directions and adds to the map **
@@ -147,59 +153,35 @@ class MapRoute {
   }
 
   // ** Constructs a route and adds start/end points **
-  public constructRoute(route_id: number): void {
-    this.fetchDirections()
-      .then((geojson) => {
-        if (!geojson) return;
+  public async constructRoute(route_id: number): Promise<void> {
+    try {
+      // Wait for directions
+      const geojson = await this.fetchDirections();
+      // Ensure geojson is there
+      if (!geojson) return;
 
-        geojson.id = `route-${route_id}-${uuidv4()}`; // Unique ID for route
-        this.addFeature(geojson);
+      geojson.id = `route-${route_id}-${uuidv4()}`;
+      this.addFeature(geojson);
 
-        const coordinates = geojson.geometry.coordinates;
-        this.constructPoint(
-          route_id,
-          "start",
-          new GeoPoint(coordinates[0][0], coordinates[0][1])
-        );
-        this.constructPoint(
-          route_id,
-          "end",
-          new GeoPoint(
-            coordinates[coordinates.length - 1][0],
-            coordinates[coordinates.length - 1][1]
-          )
-        );
-      })
-      .catch((error) => console.error("Error constructing route:", error));
-  }
+      const coordinates = geojson.geometry.coordinates;
+      this.constructPoint(
+        route_id,
+        "start",
+        new GeoPoint(coordinates[0][0], coordinates[0][1])
+      );
+      this.constructPoint(
+        route_id,
+        "end",
+        new GeoPoint(
+          coordinates[coordinates.length - 1][0],
+          coordinates[coordinates.length - 1][1]
+        )
+      );
 
-  public resetSources(mapInstance: mapboxgl.Map): void {
-    if (mapInstance.getSource(this.sourceId)) {
-      mapInstance.removeLayer("route-layer");
-      mapInstance.removeLayer("point-layer");
-      mapInstance.removeSource(this.sourceId);
+      console.log("Route added successfully", geojson);
+    } catch (error) {
+      console.error("Error constructing route:", error);
     }
-
-    this.mapInstance.addSource(this.sourceId, {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: [] },
-    });
-
-    this.addLayers();
-  }
-
-  public refreshMapByRouteId(route_id: number): void {
-    const source = this.mapInstance.getSource(
-      this.sourceId
-    ) as mapboxgl.GeoJSONSource;
-    if (!source) return;
-
-    source.setData({
-      type: "FeatureCollection",
-      features: [],
-    });
-
-    this.constructRoute(route_id);
   }
 }
 

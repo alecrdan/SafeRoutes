@@ -35,6 +35,7 @@ export default function Login({
   useEffect(() => {
     if (isAuthenticated) {
       console.log("User is authenticated.");
+      
     }
   }, [isAuthenticated, onClose]);
 

@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import GeoPoint from "../../../maps/utils/geo/GeoPoint";
 import { Button } from "@headlessui/react";
 import { Route } from "../../../maps/utils/route/route";
 import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
 import { initializeRoutes } from "@/maps/controllers/route-controller";
+import { useAppSelector } from "@/redux/hooks";
 
 interface LocationData {
   address: string;
@@ -19,7 +20,12 @@ const Menu: React.FC = () => {
   const [end, setEnd] = useState<LocationData | null>(null);
   const [routes, setRoutes] = useState<Route[]>([]);
 
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { data: receivedRoutes } = useGetRoutesQuery();
+  const isReady = useMemo(
+    () => receivedRoutes && isAuthenticated,
+    [receivedRoutes, isAuthenticated]
+  );
 
   const handleRetrieve = (res: Location | any, type: "start" | "end") => {
     if (!res.features?.length) {
@@ -44,18 +50,18 @@ const Menu: React.FC = () => {
   };
 
   useEffect(() => {
-    if (receivedRoutes && Array.isArray(receivedRoutes)) {
+    if (isReady && Array.isArray(receivedRoutes)) {
       setRoutes(receivedRoutes);
       console.log(receivedRoutes);
-     try{
-       initializeRoutes(receivedRoutes);
-     } catch (error) {
-    console.error("Failed to initialize");
-     }
-    } else {
+      try {
+        initializeRoutes(receivedRoutes);
+      } catch (error) {
+        console.error("Failed to initialize");
+      }
+    } else if (isReady) {
       console.error("Invalid data format for routes:", receivedRoutes);
     }
-  }, [receivedRoutes]);
+  }, [isReady]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

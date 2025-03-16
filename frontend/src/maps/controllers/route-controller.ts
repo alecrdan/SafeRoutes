@@ -40,12 +40,13 @@ export const removeAllLayers = async () => {
       console.error("Map was not initialized.");
       return;
     }
+    if (mapInstance.getLayer("route-layer")) {
       mapInstance.removeLayer("route-layer");
+    }
+    if (mapInstance.getLayer("point-layer")) {
       mapInstance.removeLayer("point-layer");
-
+    }
   } catch (error) {
     console.error("Error removing layers and source:", error);
   }
 };
-
-

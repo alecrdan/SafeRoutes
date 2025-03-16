@@ -45,5 +45,7 @@ next-env.d.ts
 .env.local
 .env
 
-#
-**/maps
+# Logic
+/maps
+/hooks
+/redux

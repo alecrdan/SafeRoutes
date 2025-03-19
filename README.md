@@ -9,7 +9,3 @@ SafeRoutes is a web application designed to help users plan safe routes for runn
 - **Mapping and Routing**: Utilizes Mapbox to create safe routes for various activities.
 - **Route Planning**: Prioritizes safety by avoiding high-risk areas and ensuring users have a secure experience.
 - **Route Management**: Allows users to create, save, and manage their routes.
-
-## Getting Started
-
-To get started with SafeRoutes, follow the instructions in the installation guide and set up your environment.

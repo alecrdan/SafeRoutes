@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import GeoPoint from "../../../maps/utils/geo/GeoPoint";
 import { handleSearchFlyTo } from "../../../maps/features/fly-to";
 import { Button } from "@headlessui/react";
+import { token } from "../../planner/page";
+import { SearchBox } from "@mapbox/search-js-react";
 
 const SearchBar = () => {
   const [coords, setCoords] = useState<GeoPoint | null>(null);
@@ -38,25 +40,16 @@ const SearchBar = () => {
     }
   };
 
-  const theme = {
-    variables: {
-      fontFamily: "Avenir, sans-serif",
-      unit: "14px",
-      padding: "15px",
-      boxShadow: "0 0 0 1px silver",
-    },
-  };
-
   return (
     <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">
       <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[450px]">
         {/* Start Location Input */}
+       
         <div className="">
-          {/* <SearchBox
-            // accessToken={token}
-            onRetrieve={handleRetrieve}
-            theme={theme}
-          /> */}
+          <SearchBox
+            accessToken={String(token)}
+            // onRetrieve={handleRetrieve}
+          />
         </div>
         <Button
           type="submit"

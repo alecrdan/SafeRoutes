@@ -8,7 +8,7 @@ import { Button } from "@headlessui/react";
 import { Route } from "../../../maps/utils/route/route";
 import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
 import { useAppSelector } from "@/redux/hooks";
-import { initializeRoutes } from "@/maps/services/layer/layerHub";
+import { buildRoute, initializeRoutes } from "@/maps/services/layer/layerHub";
 
 interface LocationData {
   address: string;
@@ -75,19 +75,18 @@ const Menu: React.FC = () => {
     }
 
     try {
-      let startGeoPoint = new GeoPoint(start.latitude, start.longitude);
-      let endGeoPoint = new GeoPoint(end.latitude, end.longitude);
+      let startPoint = new GeoPoint(start.longitude, start.latitude);
+      let endPoint = new GeoPoint(end.longitude, end.latitude);
 
-      console.log("Start GeoPoint:", startGeoPoint.toString());
-      console.log("End GeoPoint:", endGeoPoint.toString());
+      console.log("Start GeoPoint:", startPoint.toString());
+      console.log("End GeoPoint:", endPoint.toString());
 
-      // Hardcoded Values to save API tokens
-      const one = new GeoPoint(40.758, -73.9855);
-      const two = new GeoPoint(40.7033, -74.017);
+      buildRoute(startPoint, endPoint);
     } catch (error) {
       console.error("Failed to create route", error);
     }
   };
+
 
   return (
     <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">

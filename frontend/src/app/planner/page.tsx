@@ -1,11 +1,11 @@
 "use client";
 
 import Navbar from "../components/core/navbar";
-import SearchBar from "./components/search-bar";
 import MapView from "../../maps/page";
 import dynamic from "next/dynamic";
 
 const Menu = dynamic(() => import("./components/menu"), { ssr: false });
+const SearchBar = dynamic(() => import("./components/search-bar"), { ssr: false });
 
 export const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 

@@ -1,4 +1,5 @@
 import Map from "../map/map-instance";
+import { buildWaypoint } from "../services/layer/layerHub";
 import GeoPoint from "../utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
 
@@ -10,20 +11,20 @@ const handleSearchFlyTo = (coords: GeoPoint | null) => {
     return;
   }
 
-  // if (coords) {
-  //   // Add point
-  //   new MapRoute().constructMarker(mapInstance, "search-marker", coords);
+  if (coords) {
+    // Add point
+    buildWaypoint(coords);
 
-  //   // Fly to
-  //   mapInstance.flyTo({
-  //     center: [coords.longitude, coords.latitude],
-  //     zoom: 12,
-  //     curve: 1,
-  //     pitch: 40,
-  //   });
-  // } else {
-  //   console.error("Could not fly to location!");
-  // }
+    // Fly to
+    mapInstance.flyTo({
+      center: [coords.longitude, coords.latitude],
+      zoom: 12,
+      curve: 1,
+      pitch: 40,
+    });
+  } else {
+    console.error("Could not fly to location!");
+  }
 };
 
 const handleRouteFlyTo = async (start: GeoPoint, end: GeoPoint) => {

@@ -7,14 +7,14 @@ import GeoPoint from "@/maps/utils/geo/GeoPoint";
 
 class LayerController {
   private mapInstance: mapboxgl.Map;
-  private id: number;
+  private id: string;
   private type: string;
   private start: GeoPoint;
   private end: GeoPoint;
 
   constructor(
     mapInstance: mapboxgl.Map,
-    id: number,
+    id: string,
     type: string,
     start: GeoPoint,
     end: GeoPoint
@@ -37,14 +37,32 @@ class LayerController {
 
       // TODO: Add start and end points for the routes
       const coordinates = geojson.geometry.coordinates;
-      const start: GeoPoint = new GeoPoint(coordinates[0][0], coordinates[0][1]);
-      const end: GeoPoint = new GeoPoint(coordinates[coordinates.length - 1][0], coordinates[coordinates.length - 1][1]);
+      const start: GeoPoint = new GeoPoint(
+        coordinates[0][0],
+        coordinates[0][1]
+      );
+      const end: GeoPoint = new GeoPoint(
+        coordinates[coordinates.length - 1][0],
+        coordinates[coordinates.length - 1][1]
+      );
 
       // TODO: Change the String(this.id) to a user id???
       let layerManager = new LayerManager(this.mapInstance, this.id);
 
       // TODO: add an id to this so routes can be distinct
       layerManager.addline(geojson, start, end);
+    } catch (error) {
+      console.error("Error constructing route:", error);
+    }
+  }
+
+  public async constructPoint(): Promise<void> {
+    try {
+      // TODO: Change the String(this.id) to a user id???
+      let layerManager = new LayerManager(this.mapInstance, this.id);
+
+      // TODO: add an id to this so routes can be distinct
+      layerManager.addWaypoint("search-waypoint", this.start);
     } catch (error) {
       console.error("Error constructing route:", error);
     }

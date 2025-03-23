@@ -2,10 +2,10 @@ import GeoPoint from "@/maps/utils/geo/GeoPoint";
 
 export class LayerManager {
   private mapInstance: mapboxgl.Map;
-  private id: number;
+  private id: string;
   // TODO: Add global var for route, line, poly ???
 
-  constructor(mapInstance: mapboxgl.Map, id: number) {
+  constructor(mapInstance: mapboxgl.Map, id: string) {
     this.mapInstance = mapInstance;
     this.id = id;
 
@@ -59,7 +59,9 @@ export class LayerManager {
             "#34D399", // Green for start
             "end",
             "#F87171", // Red for end
-            "#F87171", // This defines the turns change color
+            "search-waypoint",
+            "#193cb8",
+            "#ffb86a", // This defines the turns change color
           ],
           "circle-emissive-strength": 1.0,
         },
@@ -67,7 +69,27 @@ export class LayerManager {
     }
   }
 
-  addPoint(type: string, point: GeoPoint) {
+  addWaypoint(type: string, point: GeoPoint) {
+    const pointSource = this.mapInstance.getSource(
+      `point-${this.id}`
+    ) as mapboxgl.GeoJSONSource;
+
+    const waypoint: GeoJSON.Feature = {
+      type: "Feature",
+      id: `${type}-${this.id}`,
+      properties: { type },
+      geometry: { type: "Point", coordinates: point.toArray() },
+    };
+
+    pointSource.setData({
+      type: "FeatureCollection",
+      features: [waypoint],
+    });
+
+    this.mapInstance.triggerRepaint();
+  }
+
+  addRoutePoint(type: string, point: GeoPoint) {
     const feature: GeoJSON.Feature = {
       type: "Feature",
       id: `${type}-${this.id}`,
@@ -87,8 +109,8 @@ export class LayerManager {
     ) as mapboxgl.GeoJSONSource;
 
     // Create start and end point features
-    const startFeature = this.addPoint("start", startPoint);
-    const endFeature = this.addPoint("end", endPoint);
+    const startFeature = this.addRoutePoint("start", startPoint);
+    const endFeature = this.addRoutePoint("end", endPoint);
 
     // Set Line
     lineSource.setData({

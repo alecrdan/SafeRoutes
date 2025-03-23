@@ -2,6 +2,7 @@ import { Route } from "../../utils/route/route";
 import GeoPoint from "../../utils/geo/GeoPoint";
 import Map from "../../map/map-instance";
 import LayerController from "./layerController";
+import { v4 as uuidv4 } from "uuid";
 
 export const initializeRoutes = async (routes: Route[]) => {
   try {
@@ -22,7 +23,13 @@ export const initializeRoutes = async (routes: Route[]) => {
       const end: GeoPoint = new GeoPoint(endLng, endLat);
 
       try {
-        let newRoute = new LayerController(mapInstance, route.route_id, "cycling", start, end);
+        let newRoute = new LayerController(
+          mapInstance,
+          route.route_id.toString(),
+          "cycling",
+          start,
+          end
+        );
         newRoute.constructRoute();
       } catch (error) {
         console.error(`Failed to initialize route ${route.route_id}`, error);
@@ -30,5 +37,59 @@ export const initializeRoutes = async (routes: Route[]) => {
     });
   } catch (error) {
     console.error("Error initializing routes:", error);
+  }
+};
+
+export const buildRoute = async (startPoint: GeoPoint, endPoint: GeoPoint) => {
+  try {
+    // Injected resourse
+    const mapInstance = await Map.getInstance().getMap();
+    if (!mapInstance) {
+      console.error("Map was not initialized.");
+      return;
+    }
+    try {
+      const uniqueRouteId = "search-route";
+      let newRoute = new LayerController(
+        mapInstance,
+        uniqueRouteId,
+        "cycling",
+        startPoint,
+        endPoint
+      );
+      newRoute.constructRoute();
+    } catch (error) {
+      console.error(`Failed to build search route: `, error);
+    }
+  } catch (error) {
+    console.error("Error building routes:", error);
+  }
+};
+
+export const buildWaypoint = async (
+  point: GeoPoint,
+) => {
+  try {
+    // Injected resourse
+    const mapInstance = await Map.getInstance().getMap();
+    if (!mapInstance) {
+      console.error("Map was not initialized.");
+      return;
+    }
+    try {
+      const uniqueRouteId = "search-waypoint";
+      let newRoute = new LayerController(
+        mapInstance,
+        uniqueRouteId,
+        "cycling", // do not need this
+        point,
+        new GeoPoint(0, 0) // do not need this. filler geopoint
+      );
+      newRoute.constructPoint()
+    } catch (error) {
+      console.error(`Failed to build search route: `, error);
+    }
+  } catch (error) {
+    console.error("Error building routes:", error);
   }
 };

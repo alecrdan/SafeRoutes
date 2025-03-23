@@ -12,9 +12,9 @@ import Login from "../auth/login";
 import { logout as setLogout } from "../../../redux/features/authSlice";
 import SignUp from "../auth/signup";
 import { useLogoutMutation } from "../../../redux/features/authApiSlice";
-import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { removeAllLayers } from "@/maps/controllers/route-controller";
+import { LayerManager } from "../../../maps/services/layer/layerManager";
+import Map from "../../../maps/map/map-instance";
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function Navbar() {
       .then(() => {
         dispatch(setLogout());
       })
-      .finally(() => removeAllLayers());
+      .finally(() => window.location.reload());
   };
 
   useEffect(() => {

@@ -15,7 +15,7 @@ export default function Planner() {
       <div className="menu absolute top-24 left-5 z-10">
         <Menu />
       </div>
-      <div className="searchbar absolute top-71 left-5 z-10">
+      <div className="searchbar absolute top-93 left-5 z-5">
         <SearchBar />
       </div>
       {/* Map */}

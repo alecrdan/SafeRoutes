@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { token } from "../../planner/page";
+import { SearchBox } from "@mapbox/search-js-react";
 import GeoPoint from "../../../maps/utils/geo/GeoPoint";
 import { Button } from "@headlessui/react";
 import { Route } from "../../../maps/utils/route/route";
 import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
-import { initializeRoutes } from "@/maps/controllers/route-controller";
 import { useAppSelector } from "@/redux/hooks";
+import { initializeRoutes } from "@/maps/services/layer/layerHub";
 
 interface LocationData {
   address: string;
@@ -49,6 +51,7 @@ const Menu: React.FC = () => {
     type === "start" ? setStart(locationData) : setEnd(locationData);
   };
 
+  // TODO: Routes are being requested before being authenticated.
   useEffect(() => {
     if (isReady && Array.isArray(receivedRoutes)) {
       setRoutes(receivedRoutes);
@@ -94,7 +97,17 @@ const Menu: React.FC = () => {
           <label className="block text-sm font-medium text-gray-100">
             Start
           </label>
-          <div className="mt-2">{/* <SearchBox ... /> */}</div>
+          <div className="mt-2">
+            <SearchBox
+              accessToken={String(token)}
+              options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
+              value={start?.fullAddress || ""}
+              onChange={(value) =>
+                setStart({ ...start, fullAddress: value } as LocationData)
+              }
+              onRetrieve={(res: any) => handleRetrieve(res, "start")}
+            />
+          </div>
         </div>
 
         {/* Destination Input */}
@@ -102,7 +115,17 @@ const Menu: React.FC = () => {
           <label className="block text-sm font-medium text-gray-100">
             Destination
           </label>
-          <div className="mt-2">{/* <SearchBox ... /> */}</div>
+          <div className="mt-2">
+            <SearchBox
+              accessToken={String(token)}
+              options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
+              value={end?.fullAddress || ""}
+              onChange={(value) =>
+                setEnd({ ...end, fullAddress: value } as LocationData)
+              }
+              onRetrieve={(res: any) => handleRetrieve(res, "end")}
+            />
+          </div>
         </div>
 
         {/* Submit Button */}

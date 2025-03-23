@@ -1,7 +1,6 @@
 import Map from "../map/map-instance";
 import GeoPoint from "../utils/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
-import MapRoute from "./create-features";
 
 const handleSearchFlyTo = (coords: GeoPoint | null) => {
   const mapInstance = Map.getInstance()?.getMap();
@@ -27,8 +26,8 @@ const handleSearchFlyTo = (coords: GeoPoint | null) => {
   // }
 };
 
-const handleRouteFlyTo = (start: GeoPoint, end: GeoPoint) => {
-  const mapInstance = Map.getInstance()?.getMap();
+const handleRouteFlyTo = async (start: GeoPoint, end: GeoPoint) => {
+  const mapInstance = await Map.getInstance().getMap();
 
   if (!mapInstance) {
     console.error("Map instance is not initialized yet.");

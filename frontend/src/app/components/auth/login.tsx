@@ -15,6 +15,8 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useLoginMutation } from "../../../redux/features/authApiSlice";
 import { setAuth } from "../../../redux/features/authSlice";
 import { toast } from "react-toastify";
+import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
+import { initializeRoutes } from "@/maps/services/layer/layerHub";
 
 export default function Login({
   isOpen,
@@ -31,13 +33,16 @@ export default function Login({
   const [login, { isLoading }] = useLoginMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  // Handles when user is authenticated
+  const { data: receivedRoutes } = useGetRoutesQuery(undefined, {
+    skip: !isAuthenticated, // only fetch when authenticated
+  });
+
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && receivedRoutes) {
       console.log("User is authenticated.");
-      
+      initializeRoutes(receivedRoutes); 
     }
-  }, [isAuthenticated, onClose]);
+  }, [isAuthenticated, receivedRoutes]);
 
   // Handle email change
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {

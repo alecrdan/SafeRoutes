@@ -78,9 +78,6 @@ const Menu: React.FC = () => {
       let startPoint = new GeoPoint(start.longitude, start.latitude);
       let endPoint = new GeoPoint(end.longitude, end.latitude);
 
-      console.log("Start GeoPoint:", startPoint.toString());
-      console.log("End GeoPoint:", endPoint.toString());
-
       buildRoute(startPoint, endPoint);
     } catch (error) {
       console.error("Failed to create route", error);

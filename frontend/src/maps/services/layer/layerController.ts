@@ -1,7 +1,4 @@
-import mapboxgl from "mapbox-gl";
-import { v4 as uuidv4 } from "uuid";
 import { LayerManager } from "./layerManager";
-import { lazy } from "react";
 import { fetchDirections } from "../api-routes";
 import GeoPoint from "@/maps/utils/geo/GeoPoint";
 

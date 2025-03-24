@@ -1,6 +1,7 @@
 import { LayerManager } from "./layerManager";
 import { fetchDirections } from "../api-routes";
 import GeoPoint from "@/maps/utils/geo/GeoPoint";
+import { GeoJSONFeature } from "mapbox-gl";
 
 class LayerController {
   private mapInstance: mapboxgl.Map;

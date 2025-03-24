@@ -24,17 +24,15 @@ const SearchBar = () => {
 
     const [longitude, latitude] = feature.geometry.coordinates;
 
-    const geoPoint = new GeoPoint(latitude, longitude);
+    const geoPoint = new GeoPoint(longitude, latitude);
+    console.log(geoPoint);
     setCoords(geoPoint);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log("Flying to coords:", JSON.stringify(coords));
-      const sdPoint = new GeoPoint(-117.1611, 32.7157);
-
-      handleSearchFlyTo(sdPoint);
+      handleSearchFlyTo(coords);
     } catch (error) {
       console.error("Error in handleFlyTo:", JSON.stringify(error));
     }
@@ -44,11 +42,11 @@ const SearchBar = () => {
     <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">
       <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[450px]">
         {/* Start Location Input */}
-       
+
         <div className="">
           <SearchBox
             accessToken={String(token)}
-            // onRetrieve={handleRetrieve}
+            onRetrieve={handleRetrieve}
           />
         </div>
         <Button

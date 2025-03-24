@@ -3,6 +3,7 @@ import GeoPoint from "../../utils/geo/GeoPoint";
 import Map from "../../map/map-instance";
 import LayerController from "./layerController";
 import { v4 as uuidv4 } from "uuid";
+import { handleRouteFlyTo } from "@/maps/features/fly-to";
 
 export const initializeRoutes = async (routes: Route[]) => {
   try {
@@ -58,6 +59,7 @@ export const buildRoute = async (startPoint: GeoPoint, endPoint: GeoPoint) => {
         endPoint
       );
       newRoute.constructRoute();
+      handleRouteFlyTo(startPoint, endPoint);
     } catch (error) {
       console.error(`Failed to build search route: `, error);
     }

@@ -46,19 +46,18 @@ const handleRouteFlyTo = async (start: GeoPoint, end: GeoPoint) => {
     [end.longitude, end.latitude]
   );
 
-  // Extend bounds in case of additional route points
+  // Extend bounds in case of additional route points (if any)
   const routeCoordinates: [number, number][] = [
     [start.longitude, start.latitude],
     [end.longitude, end.latitude],
   ];
   routeCoordinates.forEach((coord) => bounds.extend(coord));
 
-  const center = bounds.getCenter();
-
-  mapInstance.flyTo({
-    center: center,
+  // Fit bounds so the route is centered and visible with padding
+  mapInstance.fitBounds(bounds, {
+    padding: 100, 
+    maxZoom: 15, 
     pitch: 0,
-    zoom: 12.5,
     essential: true,
   });
 };

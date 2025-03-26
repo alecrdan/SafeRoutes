@@ -1,5 +1,5 @@
-import { Route } from "../../utils/route/route";
-import GeoPoint from "../../utils/geo/GeoPoint";
+import { Route } from "../../utils/schemas/route/route";
+import GeoPoint from "../../utils/schemas/geo/GeoPoint";
 import Map from "../../map/map-instance";
 import LayerController from "./layerController";
 import { v4 as uuidv4 } from "uuid";
@@ -83,9 +83,9 @@ export const buildWaypoint = async (
       let newRoute = new LayerController(
         mapInstance,
         uniqueRouteId,
-        "cycling", // do not need this
+        "cycling", // TODO: do not need this
         point,
-        new GeoPoint(0, 0) // do not need this. filler geopoint
+        new GeoPoint(0, 0) // TODO: do not need this. filler geopoint
       );
       newRoute.constructPoint()
     } catch (error) {

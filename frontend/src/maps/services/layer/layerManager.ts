@@ -1,19 +1,32 @@
-import GeoPoint from "@/maps/utils/geo/GeoPoint";
+import GeoPoint from "@/maps/utils/schemas/geo/GeoPoint";
+import {
+  addFeature,
+  removeFeature,
+} from "../../../redux/features/selectedRouteSlice";
+import { getDispatch } from "@/redux/context/dispatchService";
+import { store } from "@/redux/store";
 
 export class LayerManager {
   private mapInstance: mapboxgl.Map;
   private id: string;
+  private dispatch = getDispatch();
 
   // Hover
   private hoveredLineFeatureId: string | null = null;
   private hoveredPointFeatureId: string | null = null;
 
-  // Selected
+  // Selected TODO: Need to remove this a move forward with a different stratagy to detect if a feature is selected or not.
   private selectedFeatures: { id: string; source: string }[] = [];
+  private updatedRoutes: any;
 
   constructor(mapInstance: mapboxgl.Map, id: string) {
     this.mapInstance = mapInstance;
     this.id = id;
+
+    // Subscribe to store
+    store.subscribe(() => {
+      this.updatedRoutes = store.getState().selectedRoutes;
+    });
 
     // Initialize Line Layer
     if (!this.mapInstance.getSource(`line-${this.id}`)) {
@@ -97,6 +110,11 @@ export class LayerManager {
             { source, id: idStr },
             { selected: true }
           );
+
+          // Add to store
+          this.dispatch(
+            addFeature({ routeId: `line-${id}`, featureId: idStr })
+          );
         } else {
           // Remove selection
           this.selectedFeatures = this.selectedFeatures.filter(
@@ -106,8 +124,13 @@ export class LayerManager {
             { source, id: idStr },
             { selected: false }
           );
+
+          // Add to store
+          this.dispatch(
+            removeFeature({ routeId: `line-${id}`, featureId: idStr })
+          );
         }
-        console.log(this.selectedFeatures);
+        console.log("Updated routes:", this.updatedRoutes);
       }
     });
 

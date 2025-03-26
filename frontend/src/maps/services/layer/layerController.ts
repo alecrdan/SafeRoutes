@@ -1,7 +1,6 @@
 import { LayerManager } from "./layerManager";
 import { fetchDirections } from "../api-routes";
-import GeoPoint from "@/maps/utils/geo/GeoPoint";
-import { GeoJSONFeature } from "mapbox-gl";
+import GeoPoint from "@/maps/utils/schemas/geo/GeoPoint";
 
 class LayerController {
   private mapInstance: mapboxgl.Map;
@@ -20,7 +19,6 @@ class LayerController {
     if (!mapInstance || !start || !end || !type) {
       throw new Error("All constructor parameters must be provided.");
     }
-
     this.mapInstance = mapInstance;
     this.id = id;
     this.type = type;

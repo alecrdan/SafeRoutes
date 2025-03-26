@@ -1,6 +1,6 @@
 import Map from "../map/map-instance";
 import { buildWaypoint } from "../services/layer/layerHub";
-import GeoPoint from "../utils/geo/GeoPoint";
+import GeoPoint from "../utils/schemas/geo/GeoPoint";
 import mapboxgl from "mapbox-gl";
 
 const handleSearchFlyTo = (coords: GeoPoint | null) => {
@@ -55,8 +55,8 @@ const handleRouteFlyTo = async (start: GeoPoint, end: GeoPoint) => {
 
   // Fit bounds so the route is centered and visible with padding
   mapInstance.fitBounds(bounds, {
-    padding: 100, 
-    maxZoom: 15, 
+    padding: 100,
+    maxZoom: 15,
     pitch: 0,
     essential: true,
   });

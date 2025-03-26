@@ -3,9 +3,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { token } from "../../planner/page";
 import { SearchBox } from "@mapbox/search-js-react";
-import GeoPoint from "../../../maps/utils/geo/GeoPoint";
+import GeoPoint from "../../../maps/utils/schemas/geo/GeoPoint";
 import { Button } from "@headlessui/react";
-import { Route } from "../../../maps/utils/route/route";
+import { Route } from "../../../maps/utils/schemas/route/route";
 import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { buildRoute, initializeRoutes } from "@/maps/services/layer/layerHub";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import GeoPoint from "../../../maps/utils/geo/GeoPoint";
+import GeoPoint from "../../../maps/utils/schemas/geo/GeoPoint";
 import { handleSearchFlyTo } from "../../../maps/features/fly-to";
 import { Button } from "@headlessui/react";
 import { token } from "../../planner/page";
@@ -44,10 +44,7 @@ const SearchBar = () => {
         {/* Start Location Input */}
 
         <div className="">
-          <SearchBox
-            accessToken={String(token)}
-            onRetrieve={handleRetrieve}
-          />
+          <SearchBox accessToken={String(token)} onRetrieve={handleRetrieve} />
         </div>
         <Button
           type="submit"

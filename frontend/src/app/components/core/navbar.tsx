@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Button,
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
@@ -13,8 +12,6 @@ import { logout as setLogout } from "../../../redux/features/authSlice";
 import SignUp from "../auth/signup";
 import { useLogoutMutation } from "../../../redux/features/authApiSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { LayerManager } from "../../../maps/services/layer/layerManager";
-import Map from "../../../maps/map/map-instance";
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);

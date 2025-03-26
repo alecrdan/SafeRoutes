@@ -1,5 +1,5 @@
 import mapboxgl from "mapbox-gl";
-import GeoPoint from "@/maps/utils/geo/GeoPoint";
+import GeoPoint from "@/maps/utils/schemas/geo/GeoPoint";
 
 export function getDirections(
   type: string,

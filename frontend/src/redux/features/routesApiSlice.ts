@@ -1,4 +1,4 @@
-import { Route } from "@/maps/utils/route/route";
+import { Route } from "@/maps/utils/schemas/route/route";
 import { apiSlice } from "../services/apiSlice";
 
 const eventsApiSlice = apiSlice.injectEndpoints({
@@ -26,4 +26,5 @@ const eventsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useSaveRouteQuery,useGetRouteQuery,useGetRoutesQuery } = eventsApiSlice;
+export const { useSaveRouteQuery, useGetRouteQuery, useGetRoutesQuery } =
+  eventsApiSlice;

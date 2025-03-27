@@ -31,7 +31,6 @@ class LayerController {
       const geojson = await fetchDirections(this.type, this.start, this.end);
       if (!geojson) return;
 
-      // TODO: Add start and end points for the routes
       const coordinates = geojson.geometry.coordinates;
       const start: GeoPoint = new GeoPoint(
         coordinates[0][0],

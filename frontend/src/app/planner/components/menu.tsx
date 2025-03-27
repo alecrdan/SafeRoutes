@@ -51,7 +51,6 @@ const Menu: React.FC = () => {
     type === "start" ? setStart(locationData) : setEnd(locationData);
   };
 
-  // TODO: Routes are being requested before being authenticated.
   useEffect(() => {
     if (isReady && Array.isArray(receivedRoutes)) {
       setRoutes(receivedRoutes);

@@ -39,20 +39,16 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">
-      <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[450px]">
-        {/* Start Location Input */}
-
-        <div className="">
-          <SearchBox accessToken={String(token)} onRetrieve={handleRetrieve} />
-        </div>
-        <Button
-          type="submit"
-          className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-md/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-        >
-          Search
-        </Button>
-      </form>
+    <div className="flex row">
+      <div className="">
+        <SearchBox accessToken={String(token)} onRetrieve={handleRetrieve} />
+      </div>
+      <Button
+        type="submit"
+        className="flex justify-center rounded-md bg-gray-700 py-1.5 px-3 text-md/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+      >
+        Go
+      </Button>
     </div>
   );
 };

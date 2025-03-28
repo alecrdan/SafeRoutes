@@ -12,6 +12,10 @@ import { logout as setLogout } from "../../../redux/features/authSlice";
 import SignUp from "../auth/signup";
 import { useLogoutMutation } from "../../../redux/features/authApiSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import dynamic from "next/dynamic";
+const SearchBar = dynamic(() => import("../../planner/components/search-bar"), {
+  ssr: false,
+});
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -115,11 +119,12 @@ export default function Navbar() {
             </div>
 
             {/* Search Input */}
-            <input
+            <SearchBar />
+            {/* <input
               type="text"
               placeholder="Search..."
               className="hidden sm:block w-72 rounded-lg border-none bg-white/10 py-1.5 px-3 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/25"
-            />
+            /> */}
 
             {/* Actions */}
             <div className="hidden sm:flex items-center space-x-4">

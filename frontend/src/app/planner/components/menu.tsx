@@ -86,7 +86,7 @@ const Menu: React.FC = () => {
 
   return (
     <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">
-      <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[450px]">
+      <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[400px]">
         {/* Start Location Input */}
         <div>
           <label className="block text-sm font-medium text-gray-100">

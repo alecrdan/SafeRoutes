@@ -40,7 +40,7 @@ export default function Login({
   useEffect(() => {
     if (isAuthenticated && receivedRoutes) {
       console.log("User is authenticated.");
-      initializeRoutes(receivedRoutes); 
+      initializeRoutes(receivedRoutes);
     }
   }, [isAuthenticated, receivedRoutes]);
 

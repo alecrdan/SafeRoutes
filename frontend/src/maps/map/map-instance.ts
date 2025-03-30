@@ -6,7 +6,7 @@ class Map {
   private static instance: Map | null = null;
   private mapRef: mapboxgl.Map | null;
   private mapContainerRef: HTMLDivElement | null;
-  
+
   private constructor() {
     this.mapRef = null;
     this.mapContainerRef = null;
@@ -28,34 +28,57 @@ class Map {
     }
   }
 
+  // Get location
+
   /** Initialize the Mapbox Map */
   private initMap() {
     if (!this.mapContainerRef || this.mapRef) return;
 
     mapboxgl.accessToken = token;
 
-    // Get current hour on user's machine
     const currentHour = new Date().getHours();
-
-    // Determine light preset based on time of day
     let lightPreset: "dawn" | "day" | "dusk" | "night";
     if (currentHour >= 5 && currentHour < 8) lightPreset = "dawn";
     else if (currentHour >= 8 && currentHour < 18) lightPreset = "day";
     else if (currentHour >= 18 && currentHour < 21) lightPreset = "dusk";
     else lightPreset = "night";
 
-    this.mapRef = new mapboxgl.Map({
-      container: this.mapContainerRef,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: [-122.4194, 37.7749],
-      zoom: 12,
-      projection: "globe",
-    });
+    const defaultCenter: [number, number] = [-122.4194, 37.7749]; // fallback
 
-    this.mapRef.on("style.load", () => {
-      this.mapRef?.setFog({});
-      this.mapRef?.setConfigProperty("basemap", "lightPreset", lightPreset);
-    });
+    const createMap = (center: [number, number]) => {
+      this.mapRef = new mapboxgl.Map({
+        container: this.mapContainerRef!,
+        style: "mapbox://styles/mapbox/streets-v12",
+        center,
+        zoom: 10,
+        projection: "globe",
+      });
+
+      this.mapRef.on("style.load", () => {
+        this.mapRef?.setFog({});
+        this.mapRef?.setConfigProperty("basemap", "lightPreset", lightPreset);
+      });
+    };
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          createMap([longitude, latitude]);
+        },
+        (error) => {
+          console.warn("Geolocation error:", error.message);
+          createMap(defaultCenter);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      createMap(defaultCenter);
+    }
   }
 
   /** Return the MapboxGL Instance */

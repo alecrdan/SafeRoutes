@@ -37,6 +37,9 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsLoginOpen(false);
+    if (isAuthenticated == true){
+
+    }
   }, [isAuthenticated]);
 
   const guestLinks = (isMobile: boolean) => (

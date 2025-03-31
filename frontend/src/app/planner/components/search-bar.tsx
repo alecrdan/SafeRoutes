@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GeoPoint from "../../../maps/utils/schemas/geo/GeoPoint";
 import { handleSearchFlyTo } from "../../../maps/features/fly-to";
 import { Button } from "@headlessui/react";
 import { token } from "../../planner/page";
 import { SearchBox } from "@mapbox/search-js-react";
+import { useAppSelector } from "@/redux/hooks";
 
 const SearchBar = () => {
   const [coords, setCoords] = useState<GeoPoint | null>(null);
+  const [searchVisible, setSearchVisible] = useState(false);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const handleRetrieve = (res: any) => {
     if (!res.features?.length) {
@@ -38,9 +41,16 @@ const SearchBar = () => {
     }
   };
 
-  return (
-    <div className="flex row">
-      <div className="">
+  useEffect(() => {
+    if (isAuthenticated == true) {
+      setSearchVisible(true);
+    } else {
+      setSearchVisible(false);
+    }
+  }, [isAuthenticated]);
+  return searchVisible ? (
+    <form onSubmit={handleSubmit} className="flex flex-row items-center gap-2">
+      <div>
         <SearchBox accessToken={String(token)} onRetrieve={handleRetrieve} />
       </div>
       <Button
@@ -49,8 +59,8 @@ const SearchBar = () => {
       >
         Go
       </Button>
-    </div>
-  );
+    </form>
+  ) : null;
 };
 
 export default SearchBar;

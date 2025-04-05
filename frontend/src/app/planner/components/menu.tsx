@@ -20,14 +20,6 @@ interface LocationData {
 const Menu: React.FC = () => {
   const [start, setStart] = useState<LocationData | null>(null);
   const [end, setEnd] = useState<LocationData | null>(null);
-  const [routes, setRoutes] = useState<Route[]>([]);
-
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const { data: receivedRoutes } = useGetRoutesQuery();
-  const isReady = useMemo(
-    () => receivedRoutes && isAuthenticated,
-    [receivedRoutes, isAuthenticated]
-  );
 
   const handleRetrieve = (res: any, type: "start" | "end") => {
     if (!res.features?.length) {
@@ -50,19 +42,6 @@ const Menu: React.FC = () => {
 
     type === "start" ? setStart(locationData) : setEnd(locationData);
   };
-
-  useEffect(() => {
-    if (isReady && Array.isArray(receivedRoutes)) {
-      setRoutes(receivedRoutes);
-      try {
-        initializeRoutes(receivedRoutes);
-      } catch (error) {
-        console.error("Failed to initialize");
-      }
-    } else if (isReady) {
-      console.error("Invalid data format for routes:", receivedRoutes);
-    }
-  }, [isReady]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -141,14 +120,15 @@ const Menu: React.FC = () => {
           </label>
           <div className="">
             <SearchBox
-            theme={theme}
+              theme={theme}
               accessToken={String(token)}
               options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
               value={end?.fullAddress || ""}
               onChange={(value) =>
                 setEnd({ ...end, fullAddress: value } as LocationData)
               }
-              onRetrieve={(res: any) => handleRetrieve(res, "end")}            />
+              onRetrieve={(res: any) => handleRetrieve(res, "end")}
+            />
           </div>
         </div>
 

@@ -4,16 +4,17 @@ import {
   Dialog,
   DialogPanel,
   DialogTitle,
-  Button,
   Field,
   Label,
   Input,
+  Button,
+  Switch,
 } from "@headlessui/react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { useLoginMutation } from "../../../redux/features/authApiSlice";
-import { setAuth } from "../../../redux/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useLoginMutation } from "@/redux/features/authApiSlice";
+import { setAuth } from "@/redux/features/authSlice";
 import { toast } from "react-toastify";
 import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
 import { initializeRoutes } from "@/maps/services/layer/layerHub";
@@ -26,90 +27,120 @@ export default function Login({
   onClose: () => void;
 }) {
   const dispatch = useAppDispatch();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [login, { isLoading }] = useLoginMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const { data: receivedRoutes } = useGetRoutesQuery(undefined, {
-    skip: !isAuthenticated, // only fetch when authenticated
+    skip: !isAuthenticated,
   });
 
   useEffect(() => {
     if (isAuthenticated && receivedRoutes) {
-      console.log("User is authenticated.");
       initializeRoutes(receivedRoutes);
     }
   }, [isAuthenticated, receivedRoutes]);
-
-  // Handle email change
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  // Handle password change
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
 
   const onSubmit = async () => {
     try {
       await login({ email, password }).unwrap();
       dispatch(setAuth());
       toast.success("Logged in");
+      onClose();
     } catch (error) {
-      console.error("Login failed:", JSON.stringify(error));
+      console.error("Login failed:", error);
       toast.error("Failed to log in");
     }
   };
 
   return (
     <Dialog open={isOpen} as="div" className="relative z-50" onClose={onClose}>
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-      <div className="fixed inset-0 flex items-center bottom-40 justify-center p-4">
-        <DialogPanel className="py-20 px-20 w-full max-w-lg rounded-xl bg-black/90 backdrop-blur-2xl shadow-xl transition-all transform scale-100 opacity-100">
-          <DialogTitle as="h3" className="pb-5 text-3xl font-bold text-white">
-            Login
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel className="w-full max-w-md px-13 py-18 rounded-2xl bg-zinc-950 p-6 shadow-xl ring-1 ring-white/10 backdrop-blur-xl transition-all">
+          <DialogTitle
+            as="h3"
+            className="text-2xl font-bold text-white mb-6 text-center"
+          >
+            Log in to SafeRoutes
           </DialogTitle>
-          <div className="fields">
-            <Field className="pb-3">
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            className="space-y-5"
+          >
+            <Field>
               <Label className="text-sm font-medium text-white">Email</Label>
               <Input
                 type="email"
                 value={email}
-                onChange={handleEmailChange}
+                onChange={(e) => setEmail(e.target.value)}
                 className={clsx(
                   "mt-2 block w-full rounded-lg border-none bg-white/5 py-2 px-3 text-sm text-white",
-                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                  "focus:outline-none data-[focus]:outline-2 data-[focus]:outline-white/25"
                 )}
+                required
               />
             </Field>
 
-            <Field className="pb-3">
+            <Field>
               <Label className="text-sm font-medium text-white">Password</Label>
               <Input
                 type="password"
                 value={password}
-                onChange={handlePasswordChange}
+                onChange={(e) => setPassword(e.target.value)}
                 className={clsx(
                   "mt-2 block w-full rounded-lg border-none bg-white/5 py-2 px-3 text-sm text-white",
-                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                  "focus:outline-none data-[focus]:outline-2 data-[focus]:outline-white/25"
                 )}
+                required
               />
             </Field>
-          </div>
 
-          <div className="mt-7">
+            {/* Remember Me + Forgot Password */}
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={rememberMe}
+                  onChange={setRememberMe}
+                  className={clsx(
+                    "group relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full bg-white/10 p-0.5 transition-colors duration-200 ease-in-out",
+                    rememberMe ? "bg-white/10" : "bg-white/5"
+                  )}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={clsx(
+                      "inline-block size-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+                      rememberMe ? "translate-x-4" : "translate-x-0"
+                    )}
+                  />
+                </Switch>
+                <span className="text-white text-sm/6">Remember me</span>
+              </div>
+
+              <a
+                href="/forgot-password"
+                className="text-white/60 text-sm/6 hover:text-white transition"
+              >
+                Forgot password?
+              </a>
+            </div>
+
             <Button
-              onClick={onSubmit}
+              type="submit"
               disabled={isLoading}
-              className="flex w-full justify-center rounded-md bg-gray-700 py-2 px-3 text-md font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600"
+              className="w-full justify-center rounded-lg bg-white/10 py-2 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-white/15 focus:outline-none focus:ring-1 focus:ring-white disabled:opacity-50"
             >
               {isLoading ? "Logging in..." : "Login"}
             </Button>
-          </div>
+          </form>
         </DialogPanel>
       </div>
     </Dialog>

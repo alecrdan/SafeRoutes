@@ -29,7 +29,7 @@ const Menu: React.FC = () => {
     [receivedRoutes, isAuthenticated]
   );
 
-  const handleRetrieve = (res: Location | any, type: "start" | "end") => {
+  const handleRetrieve = (res: any, type: "start" | "end") => {
     if (!res.features?.length) {
       console.warn("No features found in response.");
       return;
@@ -54,7 +54,6 @@ const Menu: React.FC = () => {
   useEffect(() => {
     if (isReady && Array.isArray(receivedRoutes)) {
       setRoutes(receivedRoutes);
-      console.log(receivedRoutes);
       try {
         initializeRoutes(receivedRoutes);
       } catch (error) {
@@ -83,17 +82,47 @@ const Menu: React.FC = () => {
     }
   };
 
+  const theme = {
+    variables: {
+      fontFamily: "Avenir, sans-serif",
+      fontWeight: "500",
+      fontWeightSemibold: "600",
+      fontWeightBold: "700",
+
+      colorBackground: "#0a0a0a", // matches bg-zinc-950
+      colorBackgroundHover: "#1c1c1c", // subtle hover like bg-white/5
+      colorBackgroundActive: "#2a2a2a", // active state
+      colorText: "#ffffff", // white text
+      colorPrimary: "#ffffff", // highlight with white accents
+      colorSecondary: "#a1a1aa", // matches text-white/50
+
+      border: "1px solid rgba(255, 255, 255, 0.1)", // subtle border like Tailwind ring
+      borderRadius: "0.5rem", // similar to rounded-md
+
+      boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.1)",
+
+      unit: "14px",
+      padding: "0.5em",
+      spacing: "0.5em",
+
+      curve: "ease-in-out",
+      duration: "150ms",
+
+      lineHeight: "1.5",
+    },
+  };
 
   return (
     <div className="menu z-10 bg-zinc-950 backdrop-blur-2xl rounded-2xl">
       <form onSubmit={handleSubmit} className="space-y-5 p-6 w-[400px]">
         {/* Start Location Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-100">
+          <label className="block text-sm font-medium text-white mb-1">
             Start
           </label>
-          <div className="mt-2">
+          <div className="">
             <SearchBox
+              theme={theme}
               accessToken={String(token)}
               options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
               value={start?.fullAddress || ""}
@@ -107,19 +136,19 @@ const Menu: React.FC = () => {
 
         {/* Destination Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-100">
+          <label className="block text-sm font-medium text-white mb-1">
             Destination
           </label>
-          <div className="mt-2">
+          <div className="">
             <SearchBox
+            theme={theme}
               accessToken={String(token)}
               options={{ proximity: { lng: -122.431297, lat: 37.773972 } }}
               value={end?.fullAddress || ""}
               onChange={(value) =>
                 setEnd({ ...end, fullAddress: value } as LocationData)
               }
-              onRetrieve={(res: any) => handleRetrieve(res, "end")}
-            />
+              onRetrieve={(res: any) => handleRetrieve(res, "end")}            />
           </div>
         </div>
 
@@ -127,7 +156,7 @@ const Menu: React.FC = () => {
         <div>
           <Button
             type="submit"
-            className="flex w-full justify-center rounded-md bg-gray-700 py-1.5 px-3 text-md/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+            className="flex w-full justify-center rounded-full bg-white/10 py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-white/5"
           >
             Route
           </Button>

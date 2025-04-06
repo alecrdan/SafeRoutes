@@ -1,7 +1,20 @@
 "use client";
 
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+} from "@headlessui/react";
+import {
+  CheckCircleIcon,
+  EllipsisVerticalIcon,
+} from "@heroicons/react/20/solid";
 import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { formatDistanceToNow } from "date-fns";
@@ -90,7 +103,7 @@ export default function MainModel() {
                             )}
                           </button>
 
-                          {/* Route content */}
+                          {/* Route content (center) */}
                           <div
                             onClick={() => handleClickedRoute(route)}
                             className="flex-1 cursor-pointer"
@@ -114,6 +127,31 @@ export default function MainModel() {
                               <li>{route.duration_min} min</li>
                             </ul>
                           </div>
+
+                          {/* Dropdown menu (far right) */}
+                          <Menu as="div" className="relative">
+                            <MenuButton className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-md focus:outline-none focus:ring-1 focus:ring-white">
+                              <EllipsisVerticalIcon className="w-5 h-5" />
+                            </MenuButton>
+                            <MenuItems
+                              anchor="bottom end"
+                              className="absolute z-20 right-0 mt-2 w-28 origin-top-right rounded-xl bg-zinc-900 p-1 text-sm text-white shadow-lg ring-1 ring-white/10 backdrop-blur-md"
+                            >
+                              <MenuItem>
+                                <button
+                                  onClick={() => {
+                                    console.log(
+                                      "Delete route:",
+                                      route.route_id
+                                    ); // 🔥 Replace with your delete handler
+                                  }}
+                                  className="w-full px-3 py-1.5 text-left rounded-md hover:bg-white/10"
+                                >
+                                  Delete
+                                </button>
+                              </MenuItem>
+                            </MenuItems>
+                          </Menu>
                         </li>
                       );
                     })}

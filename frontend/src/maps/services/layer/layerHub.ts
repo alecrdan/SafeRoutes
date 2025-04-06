@@ -14,30 +14,28 @@ export const initializeRoutes = async (routes: Route[]) => {
       return;
     }
 
-    const route = routes[1];
+    routes.forEach((route: Route, index: number) => {
+      const startLat = Number(route.start_latitude);
+      const startLng = Number(route.start_longitude);
+      const endLat = Number(route.end_latitude);
+      const endLng = Number(route.end_longitude);
 
-    // routes.forEach((route: Route, index: number) => {
-    const startLat = Number(route.start_latitude);
-    const startLng = Number(route.start_longitude);
-    const endLat = Number(route.end_latitude);
-    const endLng = Number(route.end_longitude);
+      const start: GeoPoint = new GeoPoint(startLng, startLat);
+      const end: GeoPoint = new GeoPoint(endLng, endLat);
 
-    const start: GeoPoint = new GeoPoint(startLng, startLat);
-    const end: GeoPoint = new GeoPoint(endLng, endLat);
-
-    try {
-      let newRoute = new LayerController(
-        mapInstance,
-        route.route_id.toString(),
-        "cycling", // TODO: Make this get whatever route is in the database
-        start,
-        end
-      );
-      newRoute.constructRoute();
-    } catch (error) {
-      console.error(`Failed to initialize route ${route.route_id}`, error);
-    }
-    // });
+      try {
+        let newRoute = new LayerController(
+          mapInstance,
+          route.route_id.toString(),
+          "cycling", // TODO: Make this get whatever route is in the database
+          start,
+          end
+        );
+        newRoute.constructRoute();
+      } catch (error) {
+        console.error(`Failed to initialize route ${route.route_id}`, error);
+      }
+    });
   } catch (error) {
     console.error("Error initializing routes:", error);
   }

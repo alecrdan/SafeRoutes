@@ -62,7 +62,7 @@ export default function Planner() {
       <div className="menu absolute top-23 right-7 z-10">
         <MainModel />
       </div>
-      <div className="menu absolute top-93 left-7 z-10">
+      {/* <div className="menu absolute top-93 left-7 z-10">
         <RouteDetailsPanel
           route={{
             route_id: 0,
@@ -84,7 +84,7 @@ export default function Planner() {
             created_at: "2025-04-01T14:23:00Z",
           }}
         />
-      </div>
+      </div> */}
 
       {/* Map */}
       <div className="map-container">

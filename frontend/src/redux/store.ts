@@ -1,10 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { apiSlice } from './services/apiSlice';
-import authReducer from './features/authSlice';
-import selectedRoutes from './features/selectedRouteSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { apiSlice } from "./services/apiSlice";
+import authReducer from "./features/authSlice";
+import selectedRoutes from "./features/selectedRouteSlice";
+import focusedRoutes from "./features/focusedRouteSlice";
 
 export const store = configureStore({
   reducer: {
+    focusedRoutes,
     selectedRoutes,
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
@@ -14,5 +16,5 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
 });
 
-export type RootState = ReturnType<(typeof store)['getState']>;
-export type AppDispatch = (typeof store)['dispatch'];
+export type RootState = ReturnType<(typeof store)["getState"]>;
+export type AppDispatch = (typeof store)["dispatch"];

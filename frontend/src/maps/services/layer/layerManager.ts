@@ -11,24 +11,32 @@ export class LayerManager {
   private id: string;
   private dispatch = getDispatch();
 
-  // Hover
   private hoveredLineFeatureId: string | null = null;
   private hoveredPointFeatureId: string | null = null;
 
-  // Selected TODO: Need to remove this a move forward with a different stratagy to detect if a feature is selected or not.
   private selectedFeatures: { id: string; source: string }[] = [];
   private updatedRoutes: any;
+  private focusedRoutes: any;
 
   constructor(mapInstance: mapboxgl.Map, id: string) {
     this.mapInstance = mapInstance;
     this.id = id;
 
-    // Subscribe to store
     store.subscribe(() => {
       this.updatedRoutes = store.getState().selectedRoutes;
     });
 
-    // Initialize Line Layer
+    store.subscribe(() => {
+      this.focusedRoutes = store.getState().focusedRoutes;
+    });
+
+    this.initializeLayers();
+    this.attachLineEvents();
+    this.attachPointEvents();
+  }
+
+  private initializeLayers() {
+    // Line Layer
     if (!this.mapInstance.getSource(`line-${this.id}`)) {
       this.mapInstance.addSource(`line-${this.id}`, {
         type: "geojson",
@@ -37,7 +45,7 @@ export class LayerManager {
       });
 
       this.mapInstance.addLayer({
-        id: `line-${id}`,
+        id: `line-${this.id}`,
         type: "line",
         source: `line-${this.id}`,
         layout: {
@@ -58,7 +66,7 @@ export class LayerManager {
       });
     }
 
-    // Initialize Point Layer
+    // Point Layer
     if (!this.mapInstance.getSource(`point-${this.id}`)) {
       this.mapInstance.addSource(`point-${this.id}`, {
         type: "geojson",
@@ -91,48 +99,12 @@ export class LayerManager {
         },
       });
     }
+  }
 
-    this.mapInstance.on("click", `line-${this.id}`, (e) => {
-      const featureId = e.features?.[0]?.id;
-      if (featureId != undefined && featureId != null) {
-        const idStr = featureId as string;
-        const source = `line-${this.id}`;
-
-        // Avoid duplicate selections
-        const alreadySelected = this.selectedFeatures.some(
-          (f) => f.id === idStr && f.source === source
-        );
-
-        if (!alreadySelected) {
-          // Add selection
-          this.selectedFeatures.push({ id: idStr, source });
-          this.mapInstance.setFeatureState(
-            { source, id: idStr },
-            { selected: true }
-          );
-
-          // Add to store
-          this.dispatch(
-            addFeature({ routeId: `line-${id}`, featureId: idStr })
-          );
-        } else {
-          // Remove selection
-          this.selectedFeatures = this.selectedFeatures.filter(
-            (f) => f.id !== idStr || f.source !== source
-          );
-          this.mapInstance.setFeatureState(
-            { source, id: idStr },
-            { selected: false }
-          );
-
-          // Add to store
-          this.dispatch(
-            removeFeature({ routeId: `line-${id}`, featureId: idStr })
-          );
-        }
-        console.log("Updated routes:", this.updatedRoutes);
-      }
-    });
+  private attachLineEvents() {
+    this.mapInstance.on("click", `line-${this.id}`, this.handleLineClick);
+    this.mapInstance.on("mouseenter", `line-${this.id}`, this.handleLineEnter);
+    this.mapInstance.on("mouseleave", `line-${this.id}`, this.handleLineLeave);
 
     this.mapInstance.setPaintProperty(`line-${this.id}`, "line-color", [
       "case",
@@ -142,35 +114,10 @@ export class LayerManager {
       "#2563eb", // blue if hover
       "#3887be", // default
     ]);
+  }
 
-    this.mapInstance.on("mouseenter", `line-${this.id}`, (e) => {
-      this.mapInstance.getCanvas().style.cursor = "pointer";
-      const featureId = e.features?.[0]?.id;
-      if (featureId != undefined && featureId != null) {
-        this.hoveredLineFeatureId = featureId as string;
-        this.mapInstance.setFeatureState(
-          { source: `line-${this.id}`, id: this.hoveredLineFeatureId },
-          { hover: true }
-        );
-      }
-    });
-
-    this.mapInstance.on("mouseleave", `line-${this.id}`, () => {
-      this.mapInstance.getCanvas().style.cursor = "";
-
-      if (
-        this.hoveredLineFeatureId != null &&
-        this.hoveredLineFeatureId != undefined
-      ) {
-        this.mapInstance.setFeatureState(
-          { source: `line-${this.id}`, id: this.hoveredLineFeatureId },
-          { hover: false }
-        );
-        this.hoveredLineFeatureId = null;
-      }
-    });
-
-    this.mapInstance.on("mouseenter", `point-${this.id}`, (e) => {
+  private attachPointEvents() {
+    this.mapInstance.on("mouseenter", `point-${this.id}`, () => {
       this.mapInstance.getCanvas().style.cursor = "pointer";
     });
 
@@ -178,6 +125,65 @@ export class LayerManager {
       this.mapInstance.getCanvas().style.cursor = "";
     });
   }
+
+  private handleLineClick = (e: mapboxgl.MapMouseEvent) => {
+    const featureId = e.features?.[0]?.id;
+    if (featureId != undefined && featureId != null) {
+      const idStr = featureId as string;
+      const source = `line-${this.id}`;
+
+      const alreadySelected = this.selectedFeatures.some(
+        (f) => f.id === idStr && f.source === source
+      );
+
+      if (!alreadySelected) {
+        this.selectedFeatures.push({ id: idStr, source });
+        this.mapInstance.setFeatureState(
+          { source, id: idStr },
+          { selected: true }
+        );
+        this.dispatch(
+          addFeature({ routeId: `line-${this.id}`, featureId: idStr })
+        );
+      } else {
+        this.selectedFeatures = this.selectedFeatures.filter(
+          (f) => f.id !== idStr || f.source !== source
+        );
+        this.mapInstance.setFeatureState(
+          { source, id: idStr },
+          { selected: false }
+        );
+        this.dispatch(
+          removeFeature({ routeId: `line-${this.id}`, featureId: idStr })
+        );
+      }
+
+      console.log("Updated routes:", this.updatedRoutes);
+    }
+  };
+
+  private handleLineEnter = (e: mapboxgl.MapMouseEvent) => {
+    this.mapInstance.getCanvas().style.cursor = "pointer";
+    const featureId = e.features?.[0]?.id;
+    if (featureId != undefined && featureId != null) {
+      this.hoveredLineFeatureId = featureId as string;
+      this.mapInstance.setFeatureState(
+        { source: `line-${this.id}`, id: this.hoveredLineFeatureId },
+        { hover: true }
+      );
+    }
+  };
+
+  private handleLineLeave = () => {
+    this.mapInstance.getCanvas().style.cursor = "";
+    if (this.hoveredLineFeatureId) {
+      this.mapInstance.setFeatureState(
+        { source: `line-${this.id}`, id: this.hoveredLineFeatureId },
+        { hover: false }
+      );
+      this.hoveredLineFeatureId = null;
+    }
+  };
 
   addWaypoint(type: string, point: GeoPoint) {
     const pointSource = this.mapInstance.getSource(

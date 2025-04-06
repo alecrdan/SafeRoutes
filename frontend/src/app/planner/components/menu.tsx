@@ -27,6 +27,7 @@ const MenuWindow: React.FC = () => {
   const [end, setEnd] = useState<LocationData | null>(null);
   const [query, setQuery] = useState("");
   const [showRouteForm, setShowRouteForm] = useState(false); // 👈 Control visibility
+  const [routeInProgress, setRouteInProgress] = useState(false); // 👈 Control Route in progress
 
   const handleRetrieve = (res: any, type: "start" | "end") => {
     if (!res.features?.length) {
@@ -62,6 +63,7 @@ const MenuWindow: React.FC = () => {
       const startPoint = new GeoPoint(start.longitude, start.latitude);
       const endPoint = new GeoPoint(end.longitude, end.latitude);
       buildRoute(startPoint, endPoint);
+      setRouteInProgress(true);
     } catch (error) {
       console.error("Failed to create route", error);
     }
@@ -177,12 +179,29 @@ const MenuWindow: React.FC = () => {
 
             {/* Submit */}
             <div>
-              <Button
-                type="submit"
-                className="flex w-full justify-center rounded-full bg-white/10 py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-white/5"
-              >
-                Route
-              </Button>
+              {!routeInProgress ? (
+                <Button
+                  type="submit"
+                  className="flex w-full justify-center rounded-full bg-white/10 py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-white/5"
+                >
+                  Route
+                </Button>
+              ) : (
+                <div className="flex row gap-2">
+                  <Button
+                    type="submit"
+                    className="flex w-full justify-center rounded-full bg-white/10 py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-white/5"
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex w-full justify-center rounded-full bg-red-600/30 py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-red-600/20"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
             </div>
           </form>
         </div>

@@ -105,20 +105,19 @@ export function Hero() {
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
           <div className="relative z-10 mx-auto max-w-2xl lg:col-span-7 lg:max-w-none lg:pt-6 xl:col-span-6">
             <h1 className="text-4xl font-medium tracking-tight text-white">
-              Invest at the perfect time.
+              Navigate with confidence.
             </h1>
             <p className="mt-6 text-lg text-gray-400">
-              By leveraging insights from our network of industry insiders,
-              you’ll know exactly when to buy to maximize profit, and exactly
-              when to sell to avoid painful losses.
+              SafeRoutes helps you plan safer walking, running, or biking paths
+              by avoiding high-crime and high-traffic areas—giving you peace of
+              mind every step of the way.
             </p>
+
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-4">
               <AppStoreLink />
               <Button href="#" variant="outline">
                 <PlayIcon className="h-6 w-6 flex-none text-gray-400" />
-                <span className="ml-2.5 text-gray-400">
-                  Watch the video
-                </span>
+                <span className="ml-2.5 text-gray-400">Watch the video</span>
               </Button>
             </div>
           </div>

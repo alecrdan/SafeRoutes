@@ -14,28 +14,30 @@ export const initializeRoutes = async (routes: Route[]) => {
       return;
     }
 
-    routes.forEach((route: Route, index: number) => {
-      const startLat = Number(route.start_latitude);
-      const startLng = Number(route.start_longitude);
-      const endLat = Number(route.end_latitude);
-      const endLng = Number(route.end_longitude);
+    const route = routes[1];
 
-      const start: GeoPoint = new GeoPoint(startLng, startLat);
-      const end: GeoPoint = new GeoPoint(endLng, endLat);
+    // routes.forEach((route: Route, index: number) => {
+    const startLat = Number(route.start_latitude);
+    const startLng = Number(route.start_longitude);
+    const endLat = Number(route.end_latitude);
+    const endLng = Number(route.end_longitude);
 
-      try {
-        let newRoute = new LayerController(
-          mapInstance,
-          route.route_id.toString(),
-          "cycling",
-          start,
-          end
-        );
-        newRoute.constructRoute();
-      } catch (error) {
-        console.error(`Failed to initialize route ${route.route_id}`, error);
-      }
-    });
+    const start: GeoPoint = new GeoPoint(startLng, startLat);
+    const end: GeoPoint = new GeoPoint(endLng, endLat);
+
+    try {
+      let newRoute = new LayerController(
+        mapInstance,
+        route.route_id.toString(),
+        "cycling", // TODO: Make this get whatever route is in the database
+        start,
+        end
+      );
+      newRoute.constructRoute();
+    } catch (error) {
+      console.error(`Failed to initialize route ${route.route_id}`, error);
+    }
+    // });
   } catch (error) {
     console.error("Error initializing routes:", error);
   }
@@ -68,9 +70,7 @@ export const buildRoute = async (startPoint: GeoPoint, endPoint: GeoPoint) => {
   }
 };
 
-export const buildWaypoint = async (
-  point: GeoPoint,
-) => {
+export const buildWaypoint = async (point: GeoPoint) => {
   try {
     // Injected resourse
     const mapInstance = await Map.getInstance().getMap();
@@ -87,7 +87,7 @@ export const buildWaypoint = async (
         point,
         new GeoPoint(0, 0) // TODO: do not need this. filler geopoint
       );
-      newRoute.constructPoint()
+      newRoute.constructPoint();
     } catch (error) {
       console.error(`Failed to build search route: `, error);
     }

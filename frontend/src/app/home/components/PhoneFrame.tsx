@@ -29,7 +29,7 @@ export function PhoneFrame({
       <div className="absolute top-[calc(23/729*100%)] left-[calc(23/366*100%)] grid h-[calc(686/729*100%)] w-[calc(318/366*100%)] transform grid-cols-1 overflow-hidden bg-gray-900 pt-[calc(23/318*100%)]">
         {children}
       </div>
-      <PlaceholderFrame className="pointer-events-none absolute inset-0 h-full w-full fill-gray-100" />
+      <PlaceholderFrame className="pointer-events-none absolute inset-0 h-full w-full fill-black" />
       <Image
         src={frame}
         alt=""

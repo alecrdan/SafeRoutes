@@ -34,9 +34,9 @@ export default function MainModel() {
 
   const categorizedRoutes: any = {
     All: receivedRoutes,
-    // Cycling: receivedRoutes.filter((r) => r.route_type === "cycling"),
-    // Running: receivedRoutes.filter((r) => r.route_type === "running"),
-    // Walking: receivedRoutes.filter((r) => r.route_type === "walking"),
+    Cycling: receivedRoutes.filter((r) => r.transport_type === "bicycle"),
+    Running: receivedRoutes.filter((r) => r.route_type === "running"),
+    Walking: receivedRoutes.filter((r) => r.route_type === "walking"),
   };
 
   const toggleSelectedRoute = (route: any) => {

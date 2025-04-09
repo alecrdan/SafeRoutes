@@ -26,12 +26,27 @@ class LayerController {
     this.end = end;
   }
 
-  public async constructRoute(): Promise<void> {
+  public async constructRoute() {
     try {
       const geojson = await fetchDirections(this.type, this.start, this.end);
-      if (!geojson) return;
 
-      const coordinates = geojson.geometry.coordinates;
+      if (geojson == null) {
+        throw Error;
+      }
+
+      const route = geojson.geometry.coordinates;
+
+      const feature: any = {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "LineString",
+          coordinates: route,
+        },
+      };
+      if (!feature) return;
+
+      const coordinates = feature.geometry.coordinates;
       const start: GeoPoint = new GeoPoint(
         coordinates[0][0],
         coordinates[0][1]
@@ -45,7 +60,8 @@ class LayerController {
       let layerManager = new LayerManager(this.mapInstance, this.id);
 
       // TODO: add an id to this so routes can be distinct
-      layerManager.addline(geojson, start, end);
+      layerManager.addline(feature, start, end);
+      return geojson;
     } catch (error) {
       console.error("Error constructing route:", error);
     }

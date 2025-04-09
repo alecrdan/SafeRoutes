@@ -29,16 +29,7 @@ export async function fetchDirections(
       throw new Error("No routes found.");
     }
 
-    const route = json.routes[0].geometry.coordinates;
-
-    return {
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "LineString",
-        coordinates: route,
-      },
-    };
+    return json.routes[0];
   } catch (error) {
     console.error("Error fetching route:", error);
     return null;

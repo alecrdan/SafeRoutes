@@ -1,5 +1,5 @@
 export interface Route {
-    route_id: number;
+    route_id?: number;
     route_name: string;
     start_latitude: string;
     start_longitude: string;

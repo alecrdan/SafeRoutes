@@ -58,8 +58,9 @@ export const buildRoute = async (startPoint: GeoPoint, endPoint: GeoPoint) => {
         startPoint,
         endPoint
       );
-      newRoute.constructRoute();
+      const routeGeojson = newRoute.constructRoute();
       handleRouteFlyTo(startPoint, endPoint);
+      return routeGeojson;
     } catch (error) {
       console.error(`Failed to build search route: `, error);
     }

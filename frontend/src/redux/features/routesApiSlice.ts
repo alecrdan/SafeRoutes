@@ -3,7 +3,7 @@ import { apiSlice } from "../services/apiSlice";
 
 const eventsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    saveRoute: builder.query<Route, void>({
+    saveRoute: builder.mutation<Route, Partial<Route>>({
       query: (data) => ({
         url: "/routes/",
         method: "POST",
@@ -26,5 +26,5 @@ const eventsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useSaveRouteQuery, useGetRouteQuery, useGetRoutesQuery } =
+export const { useSaveRouteMutation, useGetRouteQuery, useGetRoutesQuery } =
   eventsApiSlice;

@@ -82,7 +82,11 @@ const SearchBar = () => {
   return searchVisible ? (
     <form onSubmit={handleSubmit} className="flex flex-row items-center gap-2">
       <div>
-        <SearchBox theme={theme} accessToken={String(token)} onRetrieve={handleRetrieve} />
+        <SearchBox
+          onRetrieve={() => handleSubmit}
+          theme={theme}
+          accessToken={String(token)}
+        />
       </div>
       {/* <Button
         type="submit"

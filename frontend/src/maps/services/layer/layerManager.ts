@@ -176,7 +176,10 @@ export class LayerManager {
 
   private handleLineLeave = () => {
     this.mapInstance.getCanvas().style.cursor = "";
-    if (this.hoveredLineFeatureId) {
+    if (
+      this.hoveredLineFeatureId != null ||
+      this.hoveredLineFeatureId != undefined
+    ) {
       this.mapInstance.setFeatureState(
         { source: `line-${this.id}`, id: this.hoveredLineFeatureId },
         { hover: false }

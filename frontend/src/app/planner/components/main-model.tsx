@@ -29,14 +29,18 @@ export default function MainModel() {
   const { data: receivedRoutes = [] } = useGetRoutesQuery(undefined, {
     skip: !isAuthenticated,
   });
+  const focusedRouteStore = useAppSelector(
+    (state) => state.focusedRoutes
+  );
 
   const [selectedRoutes, setSelectedRoutes] = useState<any[]>([]);
+  const [focusedRoute, setFocusedRoute] = useState<any>();
 
   const categorizedRoutes: any = {
     All: receivedRoutes,
-    Cycling: receivedRoutes.filter((r) => r.transport_type === "bicycle"),
-    Running: receivedRoutes.filter((r) => r.route_type === "running"),
-    Walking: receivedRoutes.filter((r) => r.route_type === "walking"),
+    Cycling: receivedRoutes.filter((r: any) => r.transport_type === "bicycle"),
+    Running: receivedRoutes.filter((r: any) => r.transport_type === "running"),
+    Walking: receivedRoutes.filter((r: any) => r.transport_type === "walking"),
   };
 
   const toggleSelectedRoute = (route: any) => {
@@ -49,6 +53,12 @@ export default function MainModel() {
       );
     } else {
       setSelectedRoutes((prev) => [...prev, route]);
+    }
+  };
+
+  const toggleFocusedRoute = (route: any) => {
+    if (route != focusedRoute) {
+      setFocusedRoute(route);
     }
   };
 
@@ -82,16 +92,21 @@ export default function MainModel() {
                       const isSelected = selectedRoutes.some(
                         (r) => r.route_id === route.route_id
                       );
+
                       return (
                         <li
                           key={route.route_id}
                           className={`flex items-start gap-3 rounded-md p-3 text-sm transition ${
-                            isSelected ? "bg-white/10" : "hover:bg-white/5"
+                            isSelected || focusedRoute == route
+                              ? "bg-white/10"
+                              : "hover:bg-white/5"
                           }`}
                         >
                           {/* Left selection button */}
                           <button
-                            onClick={() => toggleSelectedRoute(route)}
+                            onClick={() => {
+                              toggleSelectedRoute(route);
+                            }}
                             className={`mt-2 h-4 w-4 rounded-full border ${
                               isSelected
                                 ? "border-white bg-white text-zinc-950"
@@ -105,7 +120,10 @@ export default function MainModel() {
 
                           {/* Route content (center) */}
                           <div
-                            onClick={() => handleClickedRoute(route)}
+                            onClick={() => {
+                              handleClickedRoute(route);
+                              toggleFocusedRoute(route);
+                            }}
                             className="flex-1 cursor-pointer"
                           >
                             <div className="font-semibold text-white">

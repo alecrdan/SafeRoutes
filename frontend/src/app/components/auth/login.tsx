@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useLoginMutation } from "@/redux/features/authApiSlice";
 import { setAuth } from "@/redux/features/authSlice";
 import { toast } from "react-toastify";
-import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
+import { useGetRoutesQuery } from "@/redux/features/routes/routesApiSlice";
 import { initializeRoutes } from "@/maps/services/layer/layerHub";
 
 export default function Login({
@@ -63,8 +63,7 @@ export default function Login({
         <DialogPanel className="w-full max-w-md px-13 py-18 rounded-2xl bg-zinc-950 p-6 shadow-xl ring-1 ring-white/10 backdrop-blur-xl transition-all">
           <DialogTitle
             as="h3"
-            className="text-2xl font-bold text-white mb-6 text-center"
-          >
+            className="text-2xl font-bold text-white mb-6 text-center">
             Log in to SafeRoutes
           </DialogTitle>
 
@@ -73,8 +72,7 @@ export default function Login({
               e.preventDefault();
               onSubmit();
             }}
-            className="space-y-5"
-          >
+            className="space-y-5">
             <Field>
               <Label className="text-sm font-medium text-white">Email</Label>
               <Input
@@ -112,8 +110,7 @@ export default function Login({
                   className={clsx(
                     "group relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full bg-white/10 p-0.5 transition-colors duration-200 ease-in-out",
                     rememberMe ? "bg-white/10" : "bg-white/5"
-                  )}
-                >
+                  )}>
                   <span
                     aria-hidden="true"
                     className={clsx(
@@ -127,8 +124,7 @@ export default function Login({
 
               <a
                 href="/forgot-password"
-                className="text-white/60 text-sm/6 hover:text-white transition"
-              >
+                className="text-white/60 text-sm/6 hover:text-white transition">
                 Forgot password?
               </a>
             </div>
@@ -136,8 +132,7 @@ export default function Login({
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full justify-center rounded-lg bg-white/10 py-2 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-white/15 focus:outline-none focus:ring-1 focus:ring-white disabled:opacity-50"
-            >
+              className="w-full justify-center rounded-lg bg-white/10 py-2 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-white/15 focus:outline-none focus:ring-1 focus:ring-white disabled:opacity-50">
               {isLoading ? "Logging in..." : "Login"}
             </Button>
           </form>

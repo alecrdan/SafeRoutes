@@ -16,7 +16,7 @@ export async function fetchDirections(
   end: GeoPoint
 ): Promise<GeoJSON.Feature<GeoJSON.LineString> | null> {
   try {
-    const url = getDirections(type, start, end, mapboxgl.accessToken);
+    const url = getDirections("cycling", start, end, mapboxgl.accessToken);
     const response = await fetch(url);
 
     if (!response.ok) {

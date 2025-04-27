@@ -3,11 +3,12 @@
 import { useAppSelector } from "@/redux/hooks";
 import MapView from "../../maps/page";
 import dynamic from "next/dynamic";
-import { useGetRoutesQuery } from "@/redux/features/routesApiSlice";
+import { useGetRoutesQuery } from "@/redux/features/routes/routesApiSlice";
 import { useEffect, useMemo, useState } from "react";
 import { Route } from "@/maps/utils/schemas/route/route";
 import { initializeRoutes } from "@/maps/services/layer/layerHub";
-import RouteDetailsPanel from "./components/route-details-panel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const MenuWindow = dynamic(() => import("./components/menu"), { ssr: false });
 const MainModel = dynamic(() => import("./components/main-model"), {
@@ -46,6 +47,27 @@ export default function Planner() {
       console.error("Invalid data format for routes:", receivedRoutes);
     }
   }, [isReady]);
+
+  // Prevent navigation away from the page if a route is being created
+
+  const isCreating = useSelector(
+    (state: RootState) => state.routeCreation.isCreating
+  );
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isCreating) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isCreating]);
 
   return (
     <div>

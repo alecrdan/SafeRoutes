@@ -1,6 +1,7 @@
 import { LayerManager } from "./layerManager";
 import { fetchDirections } from "../api-routes";
 import GeoPoint from "@/maps/utils/schemas/geo/GeoPoint";
+import { MapFeature } from "@/maps/utils/schemas/feature/feature";
 
 class LayerController {
   private mapInstance: mapboxgl.Map;
@@ -16,9 +17,6 @@ class LayerController {
     start: GeoPoint,
     end: GeoPoint
   ) {
-    if (!mapInstance || !start || !end || !type) {
-      throw new Error("All constructor parameters must be provided.");
-    }
     this.mapInstance = mapInstance;
     this.id = id;
     this.type = type;
@@ -26,7 +24,7 @@ class LayerController {
     this.end = end;
   }
 
-  public async constructRoute() {
+  public async constructRoute() : Promise<MapFeature | void> {
     try {
       const geojson = await fetchDirections(this.type, this.start, this.end);
 
@@ -36,32 +34,42 @@ class LayerController {
 
       const route = geojson.geometry.coordinates;
 
-      const feature: any = {
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "LineString",
-          coordinates: route,
-        },
+      const mapFeature: MapFeature = {
+        id: this.id,
+        feature: {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "LineString",
+            coordinates: route,
+          },
+        }
       };
-      if (!feature) return;
 
-      const coordinates = feature.geometry.coordinates;
-      const start: GeoPoint = new GeoPoint(
-        coordinates[0][0],
-        coordinates[0][1]
-      );
-      const end: GeoPoint = new GeoPoint(
-        coordinates[coordinates.length - 1][0],
-        coordinates[coordinates.length - 1][1]
-      );
+      console.log(this.id);
 
-      // TODO: Change the String(this.id) to a user id???
-      let layerManager = new LayerManager(this.mapInstance, this.id);
+      let coordinates: number[][] | undefined;
 
-      // TODO: add an id to this so routes can be distinct
-      layerManager.addline(feature, start, end);
-      return geojson;
+      if (mapFeature.feature.geometry.type === "LineString" && !mapFeature != null) {
+        coordinates = mapFeature.feature.geometry.coordinates;
+        const start: GeoPoint = new GeoPoint(
+          coordinates[0][0],
+          coordinates[0][1]
+        );
+        const end: GeoPoint = new GeoPoint(
+          coordinates[coordinates.length - 1][0],
+          coordinates[coordinates.length - 1][1]
+        );
+
+        // TODO: Change the String(this.id) to a user id???
+        let layerManager = new LayerManager(this.mapInstance, mapFeature.id);
+
+        // TODO: add an id to this so routes can be distinct
+        layerManager.addline(mapFeature, start, end);
+        return mapFeature;
+      } else {
+        throw new Error("Geometry is not of type LineString");
+      }
     } catch (error) {
       console.error("Error constructing route:", error);
     }

@@ -1,5 +1,5 @@
 import { Route } from "@/maps/utils/schemas/route/route";
-import { apiSlice } from "../services/apiSlice";
+import { apiSlice } from "../../services/apiSlice";
 
 const eventsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

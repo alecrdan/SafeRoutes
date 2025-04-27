@@ -2,9 +2,11 @@ import GeoPoint from "@/maps/utils/schemas/geo/GeoPoint";
 import {
   addFeature,
   removeFeature,
-} from "../../../redux/features/selectedRouteSlice";
+} from "../../../redux/features/routes/selectedRouteSlice";
 import { getDispatch } from "@/redux/context/dispatchService";
 import { store } from "@/redux/store";
+import { MapFeature } from "@/maps/utils/schemas/feature/feature";
+import { addRoute } from "@/redux/features/routes/featureSlice";
 
 export class LayerManager {
   private mapInstance: mapboxgl.Map;
@@ -12,11 +14,9 @@ export class LayerManager {
   private dispatch = getDispatch();
 
   private hoveredLineFeatureId: string | null = null;
-  private hoveredPointFeatureId: string | null = null;
 
   private selectedFeatures: { id: string; source: string }[] = [];
   private updatedRoutes: any;
-  private focusedRoutes: any;
 
   constructor(mapInstance: mapboxgl.Map, id: string) {
     this.mapInstance = mapInstance;
@@ -24,10 +24,6 @@ export class LayerManager {
 
     store.subscribe(() => {
       this.updatedRoutes = store.getState().selectedRoutes;
-    });
-
-    store.subscribe(() => {
-      this.focusedRoutes = store.getState().focusedRoutes;
     });
 
     this.initializeLayers();
@@ -49,6 +45,7 @@ export class LayerManager {
         type: "line",
         source: `line-${this.id}`,
         layout: {
+          visibility: "none", // Set to "none" initially
           "line-join": "round",
           "line-cap": "round",
         },
@@ -77,6 +74,9 @@ export class LayerManager {
         id: `point-${this.id}`,
         type: "circle",
         source: `point-${this.id}`,
+        layout: {
+          visibility: "none", // Set to "none" initially
+        },
         paint: {
           "circle-radius": [
             "case",
@@ -157,8 +157,6 @@ export class LayerManager {
           removeFeature({ routeId: `line-${this.id}`, featureId: idStr })
         );
       }
-
-      console.log("Updated routes:", this.updatedRoutes);
     }
   };
 
@@ -217,7 +215,7 @@ export class LayerManager {
     };
   }
 
-  addline(data: GeoJSON.Feature, startPoint: GeoPoint, endPoint: GeoPoint) {
+  addline(data: MapFeature, startPoint: GeoPoint, endPoint: GeoPoint) {
     const lineSource = this.mapInstance.getSource(
       `line-${this.id}`
     ) as mapboxgl.GeoJSONSource;
@@ -230,13 +228,16 @@ export class LayerManager {
 
     lineSource.setData({
       type: "FeatureCollection",
-      features: [{ ...data, id: `line-${this.id}` }],
+      features: [{ ...data.feature, id: `line-${this.id}` }],
     });
 
     pointSource.setData({
       type: "FeatureCollection",
       features: [startFeature, endFeature],
     });
+
+    // Save the route to the Redux store
+    this.dispatch(addRoute(data));
 
     this.mapInstance.triggerRepaint();
   }
